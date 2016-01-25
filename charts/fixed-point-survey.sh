@@ -1,8 +1,8 @@
 # Experiment to explore how number of satellites affects accurcy.
 # Log file on workshop windowsill (indoors) left overnight.
-JAVA="java -cp /home/joe/workspace/FarmEye/WEB-INF/classes"
+JAVA="java -cp /home/joe/workspace/GNSS_RTK/bin"
 if [ ! -e survey.dat ] ; then
-${JAVA} farmeye.nmea.NMEAToLatLngAlt < $1 | grep NGPS > survey.dat
+${JAVA} NMEAToLatLngAlt < $1 | grep NGPS > survey.dat
 grep "NGPS 4" survey.dat > t.4
 grep "NGPS 5" survey.dat > t.5
 grep "NGPS 6" survey.dat > t.6

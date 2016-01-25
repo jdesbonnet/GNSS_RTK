@@ -7,8 +7,9 @@ public class NMEAToLatLngAlt {
 
 	public static void main (String arg[]) throws Exception {
 		
-		GeoPoint p1 = new GeoPoint(53.282665, -8.982498);
-		
+		//GeoPoint p1 = new GeoPoint(53.282665, -8.982498);
+		GeoPoint p1 = new GeoPoint(53.280435, -9.057866);
+
 		BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
 		
 		String line;
@@ -58,6 +59,9 @@ public class NMEAToLatLngAlt {
 			break;
 		case 2:
 			fixTypeStr = "DGPS";
+			break;
+		case 5:
+			fixTypeStr = "FloatRTK";
 			break;
 		}
 				
