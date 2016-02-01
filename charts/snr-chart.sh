@@ -3,7 +3,7 @@ JAVA="java -cp /home/joe/workspace/GNSS_RTK/bin"
 $JAVA NMEAToSV < $1 > snr.dat
 
 gnuplot <<- EOF
-  set terminal pngcairo size 1024,900 background rgb 'black'
+  set terminal pngcairo size 1280,720 background rgb 'black'
   set output "snr.png"
 
   set border lc rgb 'white'
@@ -12,7 +12,7 @@ gnuplot <<- EOF
   set style line 1 linecolor rgb "green"
   set style line 2 linecolor rgb "blue"
 
-  set title "GNSS Signal-to-Noise Ratio as function of position in sky\nStatic survey. Arbitrary SNR units (higher is better)." textcolor rgb "white"
+  set title "GNSS Signal-to-Noise Ratio as function of position in sky.\nStatic survey with u-Blox Neo-6M module. Limited sky view. Arbitrary SNR units (higher is better)." textcolor rgb "white"
 
   set xlabel "Azimuth (degrees clockwise from north)" textcolor rgb "white"
   set ylabel "Elevation (degrees)" textcolor rgb "white"
@@ -26,6 +26,6 @@ gnuplot <<- EOF
   
 
   set palette model RGB defined ( 0 'blue', 50 'red', 80 'yellow', 99 'green' )
-  plot 'snr.dat' using 4:3:5 with points palette
+  plot 'snr.dat' using 4:3:5 with points palette title ''
 EOF
 
