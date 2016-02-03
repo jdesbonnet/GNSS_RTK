@@ -14,6 +14,8 @@ gnuplot <<- EOF
 
   set title "GNSS Signal-to-Noise Ratio as function of position in sky.\nStatic survey with u-Blox Neo-6M module. Limited sky view. Arbitrary SNR units (higher is better)." textcolor rgb "white"
 
+  set label "Joe Desbonnet, 2 Feb 2016" at graph -0.1,-0.06 font ",8" tc rgb "white"
+
   set xlabel "Azimuth (degrees clockwise from north)" textcolor rgb "white"
   set ylabel "Elevation (degrees)" textcolor rgb "white"
   #set y2label "test" textcolor rgb "white"
@@ -26,6 +28,6 @@ gnuplot <<- EOF
   
 
   set palette model RGB defined ( 0 'blue', 50 'red', 80 'yellow', 99 'green' )
-  plot 'snr.dat' using 4:3:5 with points palette title ''
+  plot 'snr.dat' using 4:3:5 with points pointtype 1  palette title ''
 EOF
 

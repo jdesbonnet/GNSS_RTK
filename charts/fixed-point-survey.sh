@@ -10,7 +10,7 @@ grep "NGPS 7" survey.dat > t.7
 grep "NGPS 8" survey.dat > t.8
 fi
 gnuplot <<- EOF
-  set terminal pngcairo size 1024,900 background rgb 'black'
+  set terminal pngcairo size 1280,720 background rgb 'black'
   set output "survey.png"
 
   set border lc rgb 'white'
