@@ -10,7 +10,7 @@ grep "NGPS 7" survey.dat > t.7
 grep "NGPS 8" survey.dat > t.8
 fi
 gnuplot <<- EOF
-  set terminal pngcairo size 1024,900 background rgb 'black'
+  set terminal pngcairo size 1280,720 background rgb 'black'
   set output "survey.png"
 
   set border lc rgb 'white'
@@ -19,7 +19,8 @@ gnuplot <<- EOF
   set style line 1 linecolor rgb "green"
   set style line 2 linecolor rgb "blue"
 
-  set yrange[53.2820:53.2830]
+  set xrange[-8.985:-8.980]
+  set yrange[53.2815:53.2835]
 
   set title "Effect on accuracy of #satellites in GPS solution.\nFixed location, 8 hours of data. u-blox NEO-6M receiver. Limited sky view." textcolor rgb 'white'
   set xlabel "Longitude (degrees)" textcolor rgb 'white'
