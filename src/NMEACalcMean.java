@@ -21,7 +21,12 @@ public class NMEACalcMean {
 		double sumLongitude = 0;
 		double sumAltitude = 0;
 		int nSamples=0;
-
+		
+		// http://jonisalonen.com/2013/deriving-welfords-method-for-computing-variance/
+		double m = 0;
+		double s = 0;
+		double old_m;
+		
 		while ((line = r.readLine()) != null) {
 			String[] p = line.split(",");
 			if (p.length < 2) {
@@ -77,16 +82,25 @@ public class NMEACalcMean {
 			sumLatitude += latitude;
 			sumLongitude += longitude;
 			sumAltitude += altitude;
+		
+
 			
+
 			nSamples++;
-
-
+			
+			// welfords-method-for-computing-variance
+			// http://jonisalonen.com/2013/deriving-welfords-method-for-computing-variance/
+			
+			old_m = m;
+			m += (altitude - m) / nSamples;
+			s += (altitude - m) * (altitude - old_m);
 			
 		}
 		
 		if (nSamples>0) {
 			double N = (double)nSamples;
 			System.out.println ( (sumLatitude / N) + " " + (sumLongitude/N) + " " + (sumAltitude/N) );
+			System.out.println ("sigma_alt=" +  Math.sqrt(s/(nSamples-1)));
 		}
 
 	}
