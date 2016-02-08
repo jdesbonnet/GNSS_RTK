@@ -8,6 +8,7 @@ grep "NGPS 5" survey.dat > t.5
 grep "NGPS 6" survey.dat > t.6
 grep "NGPS 7" survey.dat > t.7
 grep "NGPS 8" survey.dat > t.8
+grep "NGPS 9" survey.dat > t.9
 fi
 gnuplot <<- EOF
   set terminal pngcairo size 1280,720 background rgb 'black'
@@ -31,8 +32,8 @@ gnuplot <<- EOF
 
   ##set style arrow 1 head filled size char 1.5,20,50 lc rgb "red"
 
-  cx = -8.9824
-  cy = 53.2824
+  cx = -8.9825
+  cy = 53.2826
 
   set style arrow 8 head size screen 0.008,90 lw 2 lc rgb "white" front
 
@@ -42,7 +43,7 @@ gnuplot <<- EOF
   set arrow from cx,cy to cx,cy+9e-5 lc rgb "white" as 8
   set label "10m" at cx,cy offset 0.2,0.5 left textcolor rgb "white" front
 
-  set label "Joe Desbonnet, 24 Jan 2016" at graph -0.1,-0.06 font ",8" tc rgb "white"
+  set label "Joe Desbonnet, 8 Feb 2016" at graph -0.1,-0.06 font ",8" tc rgb "white"
   ##set label "http://jdesbonnet.blogspot.com" at graph -0.05,-0.10 font ",8" tc rgb "white"
 
 
@@ -51,7 +52,8 @@ gnuplot <<- EOF
   't.5' using 3:2 title '5 satellite fix' lc rgb "yellow", \
   't.6' using 3:2 title '6 satellite fix' lc rgb "forest-green", \
   't.7' using 3:2 title '7 satellite fix' lc rgb "blue", \
-  't.8' using 3:2 title '8 satellite fix' lc rgb "#b000b0"
+  't.8' using 3:2 title '8 satellite fix' lc rgb "#b000b0", \
+  't.9' using 3:2 title '9 satellite fix' lc rgb "#400080"
 
 
 EOF

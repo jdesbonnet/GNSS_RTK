@@ -14,7 +14,7 @@ gnuplot <<- EOF
 
   set title "GPS satellite signal-to-noise ratio (SNR) as function of position in sky.\nStatic survey with u-Blox Neo-6M module. Limited sky view. Arbitrary SNR units (higher is better)." textcolor rgb "white"
 
-  set label "Joe Desbonnet, 2 Feb 2016" at graph -0.01,-0.05 font "8" tc rgb "white"
+  set label "Joe Desbonnet, 8 Feb 2016" at graph -0.01,-0.05 font "8" tc rgb "white"
 
   set xlabel "Azimuth (degrees clockwise from north)" textcolor rgb "white"
   set ylabel "Elevation (degrees)" textcolor rgb "white"
@@ -46,7 +46,7 @@ gnuplot <<- EOF
   set title "GPS satellite signal-to-noise ratio (SNR) as function of position in sky.\nStatic survey with u-Blox Neo-6M module. Limited sky view. Arbitrary SNR units (higher is better)." textcolor rgb "white"
 
 
-  set label "Joe Desbonnet, 4 Feb 2016" at graph -0.04,-0.08 font "8" tc rgb "white"
+  set label "Joe Desbonnet, 8 Feb 2016" at graph -0.04,-0.08 font "8" tc rgb "white"
   set label "SNR" at graph 1.03,1.05 font "8" tc rgb "white"
 
   set xlabel "Azimuth (degrees clockwise from north)" textcolor rgb "white"
