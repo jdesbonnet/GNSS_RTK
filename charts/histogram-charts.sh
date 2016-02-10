@@ -1,16 +1,24 @@
 #!/bin/bash
 JAVA="java -cp /home/joe/workspace/GNSS_RTK/bin:/home/joe/workspace/GNSS_RTK/lib/commons-cli-1.3.1.jar"
 NMEA_LOG=$1
-if [ ! -e lat5.dat ] ; then
-    $JAVA NMEAHistogram -dimension latitude -numsv 5 -binsize 0.000001 < $NMEA_LOG > lat5.dat
-fi
-if [ ! -e lng5.dat ] ; then
-    $JAVA NMEAHistogram -dimension longitude -numsv 5 -binsize 0.000002 < $NMEA_LOG > lng5.dat
-fi
-if [ ! -e alt5.dat ] ; then
-    $JAVA NMEAHistogram -dimension altitude -numsv 5 -binsize 0.1 < $NMEA_LOG > alt5.dat
-fi
 
+dimensions="latitude longitude altitude"
+numberOfSv="5 7 9"
+
+for dim in $dimensions; do
+  for nsv in $numberOfSv; do
+    file="${dim}${nsv}.dat"
+    if [ ! -e $file ] ; then
+        if [ $dim = "altitude" ] ; then
+            binSize="0.1"
+        else
+            binSize="0.000001"
+        fi
+        echo "Writing file $file, using bin size $binSize"
+        $JAVA NMEAHistogram -dimension $dim -numsv $nsv -binsize $binSize < $NMEA_LOG > $file
+    fi
+  done
+done
 
 gnuplot <<- EOF
 
@@ -44,10 +52,14 @@ gnuplot <<- EOF
   set x2tics font ",6"
 
   # Generate statistical summary of datasets
-  stats "lat5.dat" using 1:2 prefix "LAT" nooutput
-  stats "lng5.dat" using 1:2 prefix "LNG" nooutput
-  stats "alt5.dat" using 1:2 prefix "ALT" nooutput
+  stats "latitude5.dat" using 1:2 prefix "LAT" nooutput
+  stats "longitude5.dat" using 1:2 prefix "LNG" nooutput
+  stats "altitude5.dat" using 1:2 prefix "ALT" nooutput
 
+
+  #
+  # Latitude histogram chart
+  #
   set title "Latitude histogram" textcolor rgb 'white'
   set xlabel "Latitude (degrees)" textcolor rgb 'white'
   set x2label "North/South meters" textcolor rgb 'white'
@@ -56,24 +68,33 @@ gnuplot <<- EOF
   set xtics nomirror
   set x2tics
   unset key
-  plot 'lat5.dat' using 1:2 title '>=5 satellite fix' with boxes lc rgb "#c00000" 
+  plot 'latitude5.dat' using 1:2 title '>=5 satellite fix' with boxes lc rgb "#c00000", \
+       'latitude7.dat' using 1:2 title '>=7 satellite fix' with boxes lc rgb "forest-green", \
+       'latitude9.dat' using 1:2 title '>=9 satellite fix' with boxes lc rgb "#400080"
 
+  #
+  # Longitude histogram chart
+  #
   set title "Longitude histogram" textcolor rgb 'white'
   set xlabel "Longitude (degrees)" textcolor rgb 'white'
-  set x2label "North/South meters" textcolor rgb 'white'
+  set x2label "East/West meters" textcolor rgb 'white'
   set xrange [LNG_min_x:LNG_max_x]
   set x2range [lng_to_meters(LNG_min_x,LNG_pos_max_y,53.28):lng_to_meters(LNG_max_x,LNG_pos_max_y,53.28)]
   set xtics nomirror
   set x2tics
   unset key
-  plot 'lng5.dat' using 1:2 title '>=5 satellite fix' with boxes lc rgb "#c00000"
+  plot 'longitude5.dat' using 1:2 title '>=5 satellite fix' with boxes lc rgb "#c00000", \
+       'longitude7.dat' using 1:2 title '>=7 satellite fix' with boxes lc rgb "forest-green", \
+       'longitude9.dat' using 1:2 title '>=9 satellite fix' with boxes lc rgb "#400080"
 
   set title "Altitude histogram" textcolor rgb 'white'
   set xlabel "Altitude (meters)" textcolor rgb 'white'
   set xrange [ALT_min_x:ALT_max_x]
-  set x2label "Elevation meters" 
+  set x2label "Altitude meters" 
   unset key
-  plot 'alt5.dat' using 1:2 title '>=5 satellite fix' with boxes lc rgb "#c00000"
+  plot 'altitude5.dat' using 1:2 title '>=5 satellite fix' with boxes lc rgb "#c00000", \
+       'altitude7.dat' using 1:2 title '>=7 satellite fix' with boxes lc rgb "forest-green", \
+       'altitude9.dat' using 1:2 title '>=9 satellite fix' with boxes lc rgb "#400080"
 
 
 EOF
