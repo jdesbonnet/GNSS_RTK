@@ -79,6 +79,10 @@ public class NMEAHistogram {
 			if (!"$GPGGA".equals(p[0])) {
 				continue;
 			}
+			
+			if (p.length < 9) {
+				continue;
+			}
 
 			String timestamp = p[1];
 
@@ -133,7 +137,7 @@ public class NMEAHistogram {
 		System.err.println("lowestBin=" + lowestBin + " hightestBin=" + highestBin);
 		
 		for (int i = lowestBin; i < highestBin; i++) {
-			System.out.println ("" + (lowestBin+i*binSize) 
+			System.out.println ("" + (i*binSize) 
 					+ " " 
 					+ (counters.containsKey(i) ? counters.get(i).count : 0)
 					);
