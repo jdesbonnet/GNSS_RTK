@@ -136,7 +136,29 @@ public class NMEAHistogram {
 	
 		System.err.println("lowestBin=" + lowestBin + " hightestBin=" + highestBin);
 		
+		// Find bounds where 99% of points are within
+		int a=lowestBin,b=highestBin;
+		int s=0;
 		for (int i = lowestBin; i < highestBin; i++) {
+			s +=  (counters.containsKey(i) ? counters.get(i).count : 0);
+			if (s >= totalCount/200) {
+				a = i;
+				break;
+			}
+		}
+		
+		s = 0;
+		for (int i = highestBin; i >= lowestBin; i--) {
+			s +=  (counters.containsKey(i) ? counters.get(i).count : 0);
+			if (s >= totalCount/100) {
+				b = i;
+				break;
+			}
+		}
+		
+		System.err.println ("a=" + a + " b=" + b);
+		
+		for (int i = a; i < b; i++) {
 			System.out.println ("" + (i*binSize) 
 					+ " " 
 					+ (counters.containsKey(i) ? counters.get(i).count : 0)

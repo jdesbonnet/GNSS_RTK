@@ -5,7 +5,7 @@ if [ ! -e lat5.dat ] ; then
     $JAVA NMEAHistogram -dimension latitude -numsv 5 -binsize 0.000001 < $NMEA_LOG > lat5.dat
 fi
 if [ ! -e lng5.dat ] ; then
-    $JAVA NMEAHistogram -dimension longitude -numsv 5 -binsize 0.000001 < $NMEA_LOG > lng5.dat
+    $JAVA NMEAHistogram -dimension longitude -numsv 5 -binsize 0.000002 < $NMEA_LOG > lng5.dat
 fi
 if [ ! -e alt5.dat ] ; then
     $JAVA NMEAHistogram -dimension altitude -numsv 5 -binsize 0.1 < $NMEA_LOG > alt5.dat
@@ -15,6 +15,7 @@ fi
 gnuplot <<- EOF
   set terminal pngcairo size 1280,720 background rgb 'black'
 
+  set output "static-survey.png"
 
   set border lc rgb 'white'
   set key tc rgb 'white'
@@ -22,36 +23,30 @@ gnuplot <<- EOF
   set style line 1 linecolor rgb "green"
   set style line 2 linecolor rgb "blue"
 
+  set multiplot layout 2,3 title "NMEA log analysis, static survey" 
 
-  set title "Static survey histogram.\nu-blox NEO-6M receiver. Limited sky view." textcolor rgb 'white'
+  # Add meter scale to lat/lng. Propose to set 0m as the mean/median.
+  # http://sourceforge.net/p/gnuplot/mailman/message/26460144/
+
   set grid
-
   set style fill solid 1.0
+  #set ylabel "Count" textcolor rgb 'white'
+  set xtics font ",6"
 
-  ##set style arrow 1 head filled size char 1.5,20,50 lc rgb "red"
-
-  cx = -8.9825
-  cy = 53.2826
-
-
-
-  set ylabel "Count" textcolor rgb 'white'
-
-  set output "histogram-lat.png"
-  #set xrange [53.2820:53.2835]
+  set title "Latitude histogram" textcolor rgb 'white'
   set xlabel "Latitude (degrees)" textcolor rgb 'white'
-  plot \
-  'lat5.dat' using 1:2 title '>=5 satellite fix' with boxes lc rgb "#c00000" 
+  unset key
+  plot 'lat5.dat' using 1:2 title '>=5 satellite fix' with boxes lc rgb "#c00000" 
 
-  set output "histogram-lng.png"
+  set title "Longitude histogram" textcolor rgb 'white'
   set xlabel "Longitude (degrees)" textcolor rgb 'white'
-  plot \
-  'lng5.dat' using 1:2 title '>=5 satellite fix' with boxes lc rgb "#c000
+  unset key
+  plot 'lng5.dat' using 1:2 title '>=5 satellite fix' with boxes lc rgb "#c00000"
 
-  set output "histogram-alt.png"
+  set title "Altitude histogram" textcolor rgb 'white'
   set xlabel "Altitude (meters)" textcolor rgb 'white'
-  plot \
-  'alt5.dat' using 1:2 title '>=5 satellite fix' with boxes lc rgb "#c000
+  unset key
+  plot 'alt5.dat' using 1:2 title '>=5 satellite fix' with boxes lc rgb "#c00000"
 
 
 EOF
