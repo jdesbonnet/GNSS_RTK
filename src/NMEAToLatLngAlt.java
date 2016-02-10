@@ -10,6 +10,16 @@ public class NMEAToLatLngAlt {
 		//GeoPoint p1 = new GeoPoint(53.282665, -8.982498);
 		GeoPoint p1 = new GeoPoint(53.280435, -9.057866);
 
+		final double lat0 = 53.28263728178473;
+		final double lng0 = -8.982488730833833;
+
+		double sumLatitude = 0;
+		double sumLongitude = 0;
+		double sumDLat2 = 0;
+		double sumDLng2 = 0;
+		
+		int N=0;
+		
 		BufferedReader r = new BufferedReader(new InputStreamReader(System.in));
 		
 		String line;
@@ -67,9 +77,24 @@ public class NMEAToLatLngAlt {
 				
 		int nSatellite = Integer.parseInt(p[7]);
 		
+		if (nSatellite >= 8) {
+			sumLatitude += latitude;
+			sumLongitude += longitude;
+			sumDLat2 += latitude - lat0;
+			sumDLng2 += longitude - lng0;
+			N++;
+		}
+		
 		System.out.println(timestamp + " " + latitude + " " + longitude + " " + dx + " " + dy 
 				+ " " + fixTypeStr + " " + nSatellite);
 		}
+		
+		double meanLatitude = sumLatitude / N;
+		double meanLongitude = sumLongitude / N;
+		System.err.println("Mean latitude: " + meanLatitude);
+		System.err.println("Mean longitude: " + meanLongitude);
+		System.err.println("Sigma latitude: " + Math.sqrt(sumDLat2/(N-1)));
+		System.err.println("Sigma longitude: " + Math.sqrt(sumDLng2/(N-1)));
 		
 	}
 	
