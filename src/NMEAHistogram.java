@@ -158,15 +158,22 @@ public class NMEAHistogram {
 		
 		System.err.println ("a=" + a + " b=" + b);
 		
+		int maxCount = 0;
+		int modeBin = 0;
 		for (int i = a; i < b; i++) {
+			int c = (counters.containsKey(i) ? counters.get(i).count : 0);
+			if (c > maxCount) {
+				maxCount = c;
+				modeBin = i;
+			}
 			System.out.println ("" + (i*binSize) 
 					+ " " 
-					+ (counters.containsKey(i) ? counters.get(i).count : 0)
+					+ c
 					);
 		}
 		
 		System.err.println("" + totalCount + " in total");
-		
+		System.err.println("ModeAV: " + (modeBin*binSize));
 
 	}
 
