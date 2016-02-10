@@ -1,6 +1,14 @@
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
 
 /**
  *
@@ -12,13 +20,44 @@ public class NMEAHistogram {
 
 	public static void main(String arg[]) throws Exception {
 		
-		double from = Double.parseDouble(arg[0]);
-		double to = Double.parseDouble(arg[1]);
-		double binSize = Double.parseDouble(arg[2]);
+		Options options = new Options();
+		options.addOption("help", false, "display this message");
+		options.addOption("dimension", true, "which dimension to use: 'latitude' | 'longitude' | 'altitude'");
+		options.addOption("numsv", true, "filter for fixes using this or greater number of satellites");
+		options.addOption("dgpsonly", true, "filter for fixes using DGPS only");
+		options.addOption("binsize", true, "bin size (meters for altitude, degrees for latitude, longitude)");
+		options.addOption("range", true, "'auto' or from,to");
+
+		CommandLineParser parser = new DefaultParser();
+		CommandLine cmd = parser.parse( options, arg);
 		
-		int nBins = (int)((to-from)/binSize);
+		if (cmd.hasOption("help")) {
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp( "NMEAHistogram", options );
+			return;
+		}
 		
-		int[] count = new int[nBins];
+		String dimension = cmd.getOptionValue("dimension","altitude");
+		Double binSize = new Double(cmd.getOptionValue("binsize","1.0"));		
+		String range = cmd.getOptionValue("range","auto");
+		
+		Double from = null;
+		Double to = null;
+		if (!"auto".equals(range)) {
+			String[] p = range.split(",");
+			from = new Double(p[0]);
+			to = new Double(p[1]);
+		}
+		
+		Integer numberOfSv = null;
+		if (cmd.hasOption("numsv")) {
+			numberOfSv = new Integer(cmd.getOptionValue("numsv"));
+		}
+
+	
+		//int nBins = (int)((to-from)/binSize);
+		
+		//int[] count = new int[nBins];
 		
 
 		//System.out.println ("from " + from + " to " + to + " binSize " + binSize + " nBins" + nBins);
@@ -26,6 +65,11 @@ public class NMEAHistogram {
 
 		String line;
 
+		Map<Integer,Counter> counters = new HashMap<>();
+		int highestBin = Integer.MIN_VALUE;
+		int lowestBin = Integer.MAX_VALUE;
+		
+		int totalCount = 0;
 		
 		while ((line = r.readLine()) != null) {
 			String[] p = line.split(",");
@@ -56,20 +100,46 @@ public class NMEAHistogram {
 			
 			double altitude = Double.parseDouble(p[9]);
 			
-			if (nSatellite < 7) {
+			if (numberOfSv!= null && nSatellite < numberOfSv) {
 				continue;
 			}
 			
-			int bin = (int)((altitude-from)/binSize);
-			if (bin < nBins && bin>=0) {
-				count[bin]++;
+			double dim=0;
+			switch (dimension) {
+			case "latitude":
+				dim = latitude;
+				break;
+			case "longitude":
+				dim = longitude;
+				break;
+			case "altitude":
+				dim = altitude;
+				break;
 			}
+			Integer bin = (int)(dim / binSize);
+			
+			if (bin > highestBin) highestBin = bin;
+			if (bin < lowestBin) lowestBin = bin;
+
+			if (!counters.containsKey(bin)) {
+				counters.put(bin, new Counter());
+			}
+			counters.get(bin).count++;
+			
+			totalCount++;
 		}
 		
+	
+		System.err.println("lowestBin=" + lowestBin + " hightestBin=" + highestBin);
 		
-		for (int i = 0; i < nBins; i++) {
-			System.out.println ("" + (from + binSize*i) + " " + count[i]);
+		for (int i = lowestBin; i < highestBin; i++) {
+			System.out.println ("" + (lowestBin+i*binSize) 
+					+ " " 
+					+ (counters.containsKey(i) ? counters.get(i).count : 0)
+					);
 		}
+		
+		System.err.println("" + totalCount + " in total");
 		
 
 	}
@@ -85,5 +155,9 @@ public class NMEAHistogram {
 		int degrees = (int) (degMin / 100);
 		double minutes = degMin - degrees * 100;
 		return (double) degrees + minutes / 60;
+	}
+	
+	private static class Counter {
+		public int count = 0;
 	}
 }
