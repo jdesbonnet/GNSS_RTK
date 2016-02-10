@@ -61,8 +61,7 @@ gnuplot <<- EOF
   # Latitude histogram chart
   #
   set title "Latitude histogram" textcolor rgb 'white'
-  set xlabel "Latitude (degrees)" textcolor rgb 'white'
-  set x2label "North/South meters" textcolor rgb 'white'
+  set xlabel "Latitude (bottom: degrees, top: meters)" textcolor rgb 'white'
   set xrange [LAT_min_x:LAT_max_x]
   set x2range [latitude_to_meters(LAT_min_x,LAT_pos_max_y):latitude_to_meters(LAT_max_x,LAT_pos_max_y)]
   set xtics nomirror
@@ -76,8 +75,7 @@ gnuplot <<- EOF
   # Longitude histogram chart
   #
   set title "Longitude histogram" textcolor rgb 'white'
-  set xlabel "Longitude (degrees)" textcolor rgb 'white'
-  set x2label "East/West meters" textcolor rgb 'white'
+  set xlabel "Longitude (bottom: degrees, top: meters)" textcolor rgb 'white'
   set xrange [LNG_min_x:LNG_max_x]
   set x2range [lng_to_meters(LNG_min_x,LNG_pos_max_y,53.28):lng_to_meters(LNG_max_x,LNG_pos_max_y,53.28)]
   set xtics nomirror
@@ -87,14 +85,21 @@ gnuplot <<- EOF
        'longitude7.dat' using 1:2 title '>=7 satellite fix' with boxes lc rgb "forest-green", \
        'longitude9.dat' using 1:2 title '>=9 satellite fix' with boxes lc rgb "#400080"
 
+  #
+  # Altitude histogram chart
+  #
   set title "Altitude histogram" textcolor rgb 'white'
   set xlabel "Altitude (meters)" textcolor rgb 'white'
   set xrange [ALT_min_x:ALT_max_x]
-  set x2label "Altitude meters" 
+  set x2range [ALT_min_x:ALT_max_x]
   unset key
   plot 'altitude5.dat' using 1:2 title '>=5 satellite fix' with boxes lc rgb "#c00000", \
        'altitude7.dat' using 1:2 title '>=7 satellite fix' with boxes lc rgb "forest-green", \
        'altitude9.dat' using 1:2 title '>=9 satellite fix' with boxes lc rgb "#400080"
 
+
+  #
+  # TODO: show sd, median, mean, peak
+  #
 
 EOF
