@@ -173,7 +173,7 @@ public class NMEAHistogram {
 		}
 		
 		System.err.println("" + totalCount + " in total");
-		System.err.println("ModeAV: " + (modeBin*binSize));
+		System.err.println("ModeAV: " + (modeBin*binSize));	
 
 	}
 

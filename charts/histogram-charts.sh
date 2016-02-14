@@ -20,14 +20,16 @@ for dim in $dimensions; do
   done
 done
 
+if [ ! -e latlngheatmap.dat ]; then
+  $JAVA NMEAToLatLngHeatmap < $NMEA_LOG > latlngheatmap.dat
+fi
+
 gnuplot <<- EOF
 
   # Radius of earth at equator
   R = 6371e3
-  meters_per_degree = 3.1415926 * R / 180
-  latitude_to_meters(lat,center)=(lat-center)*meters_per_degree;
-  lng_to_meters(lng,center,lat)=(lng-center)*meters_per_degree;
-
+  lat_to_meters(lat,center)=(lat-center)*pi*R/180;
+  lng_to_meters(lng,center,lat)=(lng-center)*pi*R*cos(lat*pi/180);
 
 
   set terminal pngcairo size 1280,720 background rgb 'black'
@@ -50,6 +52,8 @@ gnuplot <<- EOF
   #set ylabel "Count" textcolor rgb 'white'
   set xtics font ",6"
   set x2tics font ",6"
+  set ytics font ",6"
+  set y2tics font ",6"
 
   # Generate statistical summary of datasets
   stats "latitude5.dat" using 1:2 prefix "LAT" nooutput
@@ -63,7 +67,7 @@ gnuplot <<- EOF
   set title "Latitude histogram" textcolor rgb 'white'
   set xlabel "Latitude (bottom: degrees, top: meters)" textcolor rgb 'white'
   set xrange [LAT_min_x:LAT_max_x]
-  set x2range [latitude_to_meters(LAT_min_x,LAT_pos_max_y):latitude_to_meters(LAT_max_x,LAT_pos_max_y)]
+  set x2range [lat_to_meters(LAT_min_x,LAT_pos_max_y):lat_to_meters(LAT_max_x,LAT_pos_max_y)]
   set xtics nomirror
   set x2tics
   unset key
@@ -96,6 +100,33 @@ gnuplot <<- EOF
   plot 'altitude5.dat' using 1:2 title '>=5 satellite fix' with boxes lc rgb "#c00000", \
        'altitude7.dat' using 1:2 title '>=7 satellite fix' with boxes lc rgb "forest-green", \
        'altitude9.dat' using 1:2 title '>=9 satellite fix' with boxes lc rgb "#400080"
+
+
+  #
+  # Latitude, longitude heatmap
+  #
+  stats "latlngheatmap.dat" using 1:3 prefix "HM" nooutput
+
+  set title "Latitude, longitude heatmap"
+  set xlabel "Longitude (bottom: degrees, top: meters)
+  set ylabel "Latitude"
+
+  set xrange [-8.9830:-8.9820]
+  set x2range [lng_to_meters(-8.9830,-8.9825,53.28):lng_to_meters(-8.9820,-8.9825,53.28)]
+  set xtics nomirror
+  set x2tics
+
+  set yrange [53.2824:53.2828]
+  set y2range [lat_to_meters(53.2824,53.2826):lat_to_meters(53.2828,53.2826)]
+  set ytics nomirror
+  set y2tics	
+
+  set palette model RGB defined ( 0 'black', 10 'blue', 50 'red', 80 'yellow', 99 'white' )
+
+  unset key
+  plot 'latlngheatmap.dat' using 2:1:3 with image
+
+
 
 
   #
