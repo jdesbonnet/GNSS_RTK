@@ -1,5 +1,7 @@
 
 
+  # TODO: missing total points in chart, binSize
+
   # Radius of earth at equator in meters
   R = 6371e3
   lat_to_meters(lat,center)=(lat-center)*pi*R/180;

@@ -111,13 +111,13 @@ gnuplot <<- EOF
   set xlabel "Longitude (bottom: degrees, top: meters)
   set ylabel "Latitude"
 
-  set xrange [-8.9830:-8.9820]
-  set x2range [lng_to_meters(-8.9830,-8.9825,53.28):lng_to_meters(-8.9820,-8.9825,53.28)]
+  set xrange [LNG_min_x:LNG_max_x]
+  set x2range [lng_to_meters(LNG_min_x,LNG_pos_max_y):lng_to_meters(LNG_max_x,LNG_pos_max_y)]
   set xtics nomirror
   set x2tics
 
-  set yrange [53.2824:53.2828]
-  set y2range [lat_to_meters(53.2824,53.2826):lat_to_meters(53.2828,53.2826)]
+  set yrange [LAT_min_x:LAT_max_x]
+  set y2range [lat_to_meters(LAT_min_x,LAT_pos_max_y):lat_to_meters(LAT_max_x,LAT_pos_max_y)]
   set ytics nomirror
   set y2tics	
 
