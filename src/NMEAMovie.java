@@ -143,8 +143,15 @@ public class NMEAMovie {
 					w.write(point[0] + " " + point[1] + "\n");
 				}
 				w.close();
-				
 				latLngPoints.clear();
+				
+				File gnuplotFile = new File ("f" + zeroPaddedFrameNumber + ".gp");
+				w = new FileWriter(gnuplotFile);
+				w.write("load 'movie.gp'\n");
+				w.write("set title 'Frame " + zeroPaddedFrameNumber + "'\n");
+				w.write("plot '" + frameHeatMap.getName() + "' with image, \\n" );
+				w.write("'" + framePoints + "' with points");
+				w.close();
 				
 				frameNumber++;
 				prevTimeBin = timeBin;
