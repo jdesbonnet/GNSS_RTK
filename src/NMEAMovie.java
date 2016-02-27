@@ -61,8 +61,8 @@ public class NMEAMovie {
 		}
 
 
-		int nLatBin = (int)((lat1-lat0)/latBinSize);
-		int nLngBin = (int)((lng1-lng0)/lngBinSize);
+		int nLatBin = (int)((lat1-lat0)/latBinSize) + 1;
+		int nLngBin = (int)((lng1-lng0)/lngBinSize) + 1;
 		
 
 		int latBin0 = (int)(lat0 / latBinSize);
@@ -148,9 +148,12 @@ public class NMEAMovie {
 				File gnuplotFile = new File ("f" + zeroPaddedFrameNumber + ".gp");
 				w = new FileWriter(gnuplotFile);
 				w.write("load 'movie.gp'\n");
+				w.write("set output 'f" + zeroPaddedFrameNumber + ".png'\n");
 				w.write("set title 'Frame " + zeroPaddedFrameNumber + "'\n");
-				w.write("plot '" + frameHeatMap.getName() + "' with image, \\n" );
-				w.write("'" + framePoints + "' with points");
+				w.write("plot '" + frameHeatMap.getName() + "'"
+				+ " using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):3 " 
+				+ " with image \\\n" );
+				//w.write("'" + framePoints + "' with points");
 				w.close();
 				
 				frameNumber++;
