@@ -45,8 +45,8 @@ set arrow from graph 0,graph 0 to graph 0,graph 1 nohead ls -1 lc rgb "black" fr
 
 set key textcolor rgb 'blue'
 
-#set terminal pngcairo size 640,640 background rgb 'black'
-set terminal pngcairo size 640,640 transparent
+set terminal pngcairo size 640,640 background rgb 'black'
+#set terminal pngcairo size 640,640 transparent
 
 set size square
 

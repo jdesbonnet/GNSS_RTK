@@ -182,10 +182,12 @@ public class NMEAMovie {
 				w = new FileWriter(gnuplotFile);
 				w.write("load 'movie.gp'\n");
 				w.write("set output 'f" + zeroPaddedFrameNumber + ".png'\n");
-				w.write("set title '" + df.format(ts)  + " frame" + zeroPaddedFrameNumber + "'\n");
+				w.write("set title '" + df.format(ts)  
+					// 	+ " frame" + zeroPaddedFrameNumber 
+					+ "'\n");
 				w.write("plot '" + frameHeatMap.getName() + "'"
-				+ " using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):3 " 
-				+ " with image \\\n" );
+					+ " using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):3 " 
+					+ " with image \\\n" );
 			
 				
 				if (frameNumber>3) {
@@ -212,9 +214,13 @@ public class NMEAMovie {
 				
 				w.write(
 				", '" + framePoints 
-				+ "' using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):(0.5) with circles linecolor rgb '#ffffff' fs transparent solid 0.1 noborder title ''	\n")
+				+ "' using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):(0.5) with circles linecolor rgb '#ffffff' fs transparent solid 0.1 noborder title ''	\\\n")
 				;
 				
+				w.write(
+				", 'f" + zeroPaddedFrameNumber + ".sv.png' binary filetype=png center=(20,-15) dx=0.03 dy=0.03 with rgbimage notitle\n"
+				);
+
 				w.close();
 				
 				// Write SV data file
@@ -231,7 +237,7 @@ public class NMEAMovie {
 				w = new FileWriter(svGnuplotFile);
 				w.write("load 'sv_chart.gp'\n");
 				w.write("set output 'f" + zeroPaddedFrameNumber + ".sv.png'\n");
-				w.write("plot 'f" + zeroPaddedFrameNumber + ".sv.dat' using (90-$2):(90-$3):(	5.0):4 with circles lc palette title '' \\\n");
+				w.write("plot 'f" + zeroPaddedFrameNumber + ".sv.dat' using (90-$2):(90-$3):(5.0):4 with circles lc palette title '' \\\n");
 				w.write(",'f" + zeroPaddedFrameNumber + ".sv.dat' using (90-$2):(90-$3):1 with labels textcolor rgb 'white' title ''");
 				w.close();
 				
