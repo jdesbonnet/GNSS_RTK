@@ -221,17 +221,18 @@ public class NMEAMovie {
 				File svFile = new File ("f" + zeroPaddedFrameNumber + ".sv.dat");
 				w = new FileWriter(svFile);
 				for (SV sv : svs.values()) {
-					w.write("" + sv.svn + " " + sv.elevation + " " + sv.azimuth + " " + sv.snr + "\n");
+					w.write("" + sv.svn + " " + sv.azimuth + " " + sv.elevation +  " " + sv.snr + "\n");
 				}
 				w.close();
 				svs.clear();
 				
-				// Write SV gnuplot file
+				// Write polar SV gnuplot file
 				File svGnuplotFile = new File ("f" + zeroPaddedFrameNumber + ".sv.gp");
 				w = new FileWriter(svGnuplotFile);
 				w.write("load 'sv_chart.gp'\n");
 				w.write("set output 'f" + zeroPaddedFrameNumber + ".sv.png'\n");
-				w.write("plot 'f" + zeroPaddedFrameNumber + ".sv.dat' using 3:2 title ''\n");
+				w.write("plot 'f" + zeroPaddedFrameNumber + ".sv.dat' using (90-$2):3:4 with circles lc palette title '' \\\n");
+				w.write(",'f" + zeroPaddedFrameNumber + ".sv.dat' using (90-$2):3:1 with labels tc rgb 'white' title ''");
 				w.close();
 				
 				frameNumber++;	

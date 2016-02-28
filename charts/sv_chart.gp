@@ -1,15 +1,25 @@
 set polar
 set angles degree
-r = 6
-set urange[0:r] # radius
-set vrange[0:360] # angle
+set trange[0:360] # radius
+set rrange[0:90] 
+#set xrange[-90:90]
+#set yrange[-90:90]
 
-set grid polar 60 #set the grid to be displayed every 60 degrees
-set grid ls 10
+set grid polar 45 lc rgb 'blue'
 
-set border lc rgb 'white'
-set key tc rgb 'white'
+set xtics axis #disply the xtics on the axis instead of on the border
+set ytics axis
 
+#set border lc rgb 'white'
+unset border
 
-set terminal pngcairo size 320,320 background rgb 'black'
+set key tc rgb 'blue'
+
+#set terminal pngcairo size 640,640 background rgb 'black'
+set terminal pngcairo size 640,640 
+
+set size square
+
+# for SV SNR color circles
+set style fill transparent solid 0.8 noborder
 
