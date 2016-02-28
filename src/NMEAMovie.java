@@ -231,8 +231,8 @@ public class NMEAMovie {
 				w = new FileWriter(svGnuplotFile);
 				w.write("load 'sv_chart.gp'\n");
 				w.write("set output 'f" + zeroPaddedFrameNumber + ".sv.png'\n");
-				w.write("plot 'f" + zeroPaddedFrameNumber + ".sv.dat' using (90-$2):3:4 with circles lc palette title '' \\\n");
-				w.write(",'f" + zeroPaddedFrameNumber + ".sv.dat' using (90-$2):3:1 with labels tc rgb 'white' title ''");
+				w.write("plot 'f" + zeroPaddedFrameNumber + ".sv.dat' using (90-$2):(90-$3):4 with circles lc palette title '' \\\n");
+				w.write(",'f" + zeroPaddedFrameNumber + ".sv.dat' using (90-$2):(90-$3):1 with labels textcolor rgb 'white' title ''");
 				w.close();
 				
 				frameNumber++;	
