@@ -153,16 +153,19 @@ public class NMEAMovie {
 				w.write("plot '" + frameHeatMap.getName() + "'"
 				+ " using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):3 " 
 				+ " with image \\\n" );
-				w.write(
-				", '" + framePoints 
-				+ "' using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)) with circles linecolor rgb '#fff' fs transparent solid 0.1 noborder \\\n")
-				;
+				
 				if (frameNumber>1) {
 				w.write(
 				", 'f" + String.format("%06d", frameNumber-1) + ".pt.dat"
-				+ "' using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)) with circles linecolor rgb '#888' fs transparent solid 0.1 noborder\n")
+				+ "' using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):(0.5) with circles linecolor rgb '#888' fs transparent solid 0.1 noborder title''\\\n")
 				;
 				}
+				
+				w.write(
+				", '" + framePoints 
+				+ "' using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):(0.5) with circles linecolor rgb '#fff' fs transparent solid 0.1 noborder title ''\n")
+				;
+
 				
 				w.close();
 				
