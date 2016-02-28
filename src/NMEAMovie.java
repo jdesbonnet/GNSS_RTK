@@ -93,6 +93,9 @@ public class NMEAMovie {
 		while ((line = r.readLine()) != null) {
 			
 			int checksumIndex = line.lastIndexOf('*');
+			if (checksumIndex < 0) {
+				continue;
+			}
 			line = line.substring(0,checksumIndex);
 			
 			String[] p = line.split(",");
@@ -211,7 +214,6 @@ public class NMEAMovie {
 				", '" + framePoints 
 				+ "' using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):(0.5) with circles linecolor rgb '#ffffff' fs transparent solid 0.1 noborder title ''	\n")
 				;
-
 				
 				w.close();
 				
@@ -224,6 +226,13 @@ public class NMEAMovie {
 				w.close();
 				svs.clear();
 				
+				// Write SV gnuplot file
+				File svGnuplotFile = new File ("f" + zeroPaddedFrameNumber + ".sv.gp");
+				w = new FileWriter(svGnuplotFile);
+				w.write("load 'sv_chart.gp'\n");
+				w.write("set output 'f" + zeroPaddedFrameNumber + ".sv.png'\n");
+				w.write("plot 'f" + zeroPaddedFrameNumber + ".sv.dat' using 3:2 title ''\n");
+				w.close();
 				
 				frameNumber++;	
 				prevTimeBin = timeBin;
@@ -259,7 +268,7 @@ public class NMEAMovie {
 			if (counter == null) {
 				counter = new Counter();
 				counters[latBin-latBin0][lngBin-lngBin0] = counter;
-				System.err.println("creating counter for " + (latBin-latBin0) + " " + (lngBin-lngBin0));
+				//System.err.println("creating counter for " + (latBin-latBin0) + " " + (lngBin-lngBin0));
 			}
 			counter.count++;
 			
