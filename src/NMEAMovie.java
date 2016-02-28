@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
+import java.util.HashMap;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -88,18 +88,47 @@ public class NMEAMovie {
 	 	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	 	
 		ArrayList<double[]> latLngPoints = new ArrayList<>();
+		HashMap<Integer,SV> svs = new HashMap<>();
 		
 		while ((line = r.readLine()) != null) {
+			
+			int checksumIndex = line.lastIndexOf('*');
+			line = line.substring(0,checksumIndex);
+			
 			String[] p = line.split(",");
 			if (p.length < 2) {
 				continue;
 			}
 			
+			// Get date from GPRMC sentence
 			if ("$GPRMC".equals(p[0])) {
 				date = p[9];
 				//System.err.println ("date=" + date);
 				continue;
 			}
+			
+			// Set SV position and SNR
+			if ("$GPGSV".equals(p[0])) {	
+				int nrec = (p.length-4)/4;
+				for (int i = 0; i < nrec; i++) {
+					// timestamp prn elevation azimuth snr
+					try {
+						SV sv = new SV();
+						sv.svn = new Integer(p[i * 4 + 4]);
+						sv.elevation = Double.parseDouble(p[i * 4 + 5]);
+						sv.azimuth = Double.parseDouble(p[i * 4 + 6]);
+						sv.snr = Double.parseDouble( p[i * 4 + 7]);
+						svs.put(sv.svn, sv);
+					} catch (NumberFormatException e) {
+						// ignore line
+					} catch (ArrayIndexOutOfBoundsException e) {
+						e.printStackTrace();
+						System.err.println("line=" + line);
+					}
+				}
+				continue;
+			}
+			
 			if (!"$GPGGA".equals(p[0])) {
 				continue;
 			}
@@ -186,6 +215,16 @@ public class NMEAMovie {
 				
 				w.close();
 				
+				// Write SV data file
+				File svFile = new File ("f" + zeroPaddedFrameNumber + ".sv.dat");
+				w = new FileWriter(svFile);
+				for (SV sv : svs.values()) {
+					w.write("" + sv.svn + " " + sv.elevation + " " + sv.azimuth + " " + sv.snr + "\n");
+				}
+				w.close();
+				svs.clear();
+				
+				
 				frameNumber++;	
 				prevTimeBin = timeBin;
 				
@@ -248,5 +287,12 @@ public class NMEAMovie {
 	
 	private static class Counter {
 		public int count = 0;
+	}
+	
+	private static class SV {
+		Integer svn;
+		Double azimuth;
+		Double elevation;
+		Double snr;
 	}
 }
