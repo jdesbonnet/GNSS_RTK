@@ -85,6 +85,7 @@ public class NMEAMovie {
 		String date="";
 		
 		SimpleDateFormat timestampFormat = new SimpleDateFormat("ddMMyy-HHmmss");
+	 	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	 	
 		ArrayList<double[]> latLngPoints = new ArrayList<>();
 		
@@ -149,7 +150,7 @@ public class NMEAMovie {
 				w = new FileWriter(gnuplotFile);
 				w.write("load 'movie.gp'\n");
 				w.write("set output 'f" + zeroPaddedFrameNumber + ".png'\n");
-				w.write("set title 'Frame " + zeroPaddedFrameNumber + "'\n");
+				w.write("set title '" + df.format(ts)  + " frame" + zeroPaddedFrameNumber + "'\n");
 				w.write("plot '" + frameHeatMap.getName() + "'"
 				+ " using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):3 " 
 				+ " with image \\\n" );
