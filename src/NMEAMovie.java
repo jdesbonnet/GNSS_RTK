@@ -154,17 +154,26 @@ public class NMEAMovie {
 				+ " using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):3 " 
 				+ " with image \\\n" );
 			
+				
+				if (frameNumber>3) {
+				w.write(
+				", 'f" + String.format("%06d", frameNumber-3) + ".pt.dat"
+				+ "' using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):(0.5) with circles linecolor rgb '#444444' fs transparent solid 0.1 noborder title''\\\n")
+				;
+				}
+				
+				
 				if (frameNumber>2) {
 				w.write(
 				", 'f" + String.format("%06d", frameNumber-2) + ".pt.dat"
-				+ "' using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):(0.5) with circles linecolor rgb '#444444' fs transparent solid 0.1 noborder title''\\\n")
+				+ "' using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):(0.5) with circles linecolor rgb '#888888' fs transparent solid 0.1 noborder title''\\\n")
 				;
 				}
 				
 				if (frameNumber>1) {
 				w.write(
 				", 'f" + String.format("%06d", frameNumber-1) + ".pt.dat"
-				+ "' using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):(0.5) with circles linecolor rgb '#888888' fs transparent solid 0.1 noborder title''\\\n")
+				+ "' using (lng_to_meters($2,clng,clat)):(lat_to_meters($1,clat)):(0.5) with circles linecolor rgb '#cccccc' fs transparent solid 0.1 noborder title''\\\n")
 				;
 				}
 				
