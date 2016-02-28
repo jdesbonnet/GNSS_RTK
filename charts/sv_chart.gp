@@ -8,13 +8,15 @@ set trange[0:360]
 set rrange[0:90] 
 
 # Spokes on polar chart at 45 degree increments
-set grid polar 45 linecolor rgb 'blue'
+set grid polar 45 linecolor rgb 'white'
+
+set tics textcolor rgb 'white'
 
 unset xtics 
 unset ytics
 
 # Rings on polar chart (elevation) every 30 degrees
-set rtics axis 30 nomirror rotate by -270  offset 0, 0.7
+set rtics axis 30 nomirror rotate by 0 offset 0, 0.7  textcolor rgb 'white'
 
 #"remove" the tics so that only the y tics are displayed
 #set xtics scale 0 
@@ -23,16 +25,23 @@ set rtics axis 30 nomirror rotate by -270  offset 0, 0.7
 #set xtics ("" 10, "" 20, "" 30, "" 40, "" 50, "" 60) 
 #set ytics 0, 10, 90 #make the ytics go from the center (0) to 6000 with incrment of 1000
 
-#this places a label on the outside
-set_label(x, text) = sprintf("set label '%s' at (95*cos(%f)), (95*sin(%f)) center", text, 90-x, 90-x) 
+# 4 points of compass
+set_label(x, text) = sprintf("set label '%s' at (95*cos(%f)), (95*sin(%f)) center textcolor rgb 'white'", text, 90-x, 90-x) 
 eval set_label(0, "N")
 eval set_label(90, "E")
 eval set_label(180, "S")
 eval set_label(270, "W")
 
 
-#set border lc rgb 'white'
-unset border
+# Problem with the tic color: border and tic marks are the same color. So can't 
+# have no border and have white ticks. But can overwrite border with 'arrows'.
+set border linecolor rgb 'white'
+#unset border
+set arrow from graph 0,graph 1 to graph 1,graph 1 nohead ls -1 lc rgb "black" front
+set arrow from graph 1,graph 1 to graph 1,graph 0 nohead ls -1 lc rgb "black" front
+set arrow from graph 1,graph 0 to graph 0,graph 0 nohead ls -1 lc rgb "black" front
+set arrow from graph 0,graph 0 to graph 0,graph 1 nohead ls -1 lc rgb "black" front
+
 
 set key textcolor rgb 'blue'
 
@@ -45,5 +54,5 @@ set size square
 set palette model RGB defined ( 0 'blue', 50 'red', 80 'yellow', 99 'green' )
 set style fill transparent solid 0.8 noborder
 set cbrange [0:45]
-set cblabel "Signal Strength"
+set cblabel "Signal Strength" textcolor rgb 'white'
 
