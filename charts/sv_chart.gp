@@ -45,8 +45,8 @@ set arrow from graph 0,graph 0 to graph 0,graph 1 nohead ls -1 lc rgb "black" fr
 
 set key textcolor rgb 'blue'
 
-set terminal pngcairo size 640,640 background rgb 'black'
-#set terminal pngcairo size 640,640 transparent
+#set terminal pngcairo size 640,640 background rgb 'black'
+set terminal pngcairo size 640,640 transparent
 
 set size square
 
@@ -55,4 +55,7 @@ set palette model RGB defined ( 0 'blue', 50 'red', 80 'yellow', 99 'green' )
 set style fill transparent solid 0.8 noborder
 set cbrange [0:45]
 set cblabel "Signal Strength" textcolor rgb 'white'
+
+set tmargin at screen 1.2
+set bmargin at screen 0.05
 

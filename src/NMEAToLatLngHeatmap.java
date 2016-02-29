@@ -7,13 +7,21 @@ public class NMEAToLatLngHeatmap {
 
 		final double lat0 = 53.2824;
 		final double lng0 = -8.9830;
-
 		final double lat1 = 53.2830;
 		final double lng1 = -8.9820;
-
 		final double latBinSize = 0.000005;
 		final double lngBinSize = 0.000005;
-
+		
+		// NUIG
+		/*
+		final double lat0 = 53.2800;
+		final double lng0 = -9.0580;
+		final double lat1 = 53.2830;
+		final double lng1 = -9.0560;
+		final double latBinSize = 0.0000025;
+		final double lngBinSize = 0.0000025;
+		*/
+		
 		final int nLatBin = (int) ((lat1 - lat0) / latBinSize);
 		final int nLngBin = (int) ((lng1 - lng0) / lngBinSize);
 		int[][] count = new int[nLatBin][nLngBin];
