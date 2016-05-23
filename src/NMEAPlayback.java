@@ -9,12 +9,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Play back NMEA.
- * @author joe
+ * Play back NMEA log file in real time. Rather simplistic. Does not handle midnight rollover.
+ *
+ * TODO: option to change NMEA time/date to current time.
+ * 
+ * @author Joe Desbonnet
  *
  */
 public class NMEAPlayback {
 
+	// GGA sentence timestamp format.
 	private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HHmmss");
 	
 	public static void main (String arg[]) throws Exception {
@@ -26,26 +30,32 @@ public class NMEAPlayback {
 		String line;
 		String[] p;
 
-		
+		// Find first GGA sentence 
 		line = skipToNextGGA(r, null);
 		p = line.split(",");
 		Date logStartTime = timeFormat.parse(p[1]);
 		
 		long sysTimeAtStartOfPlayback = System.currentTimeMillis();
-		w.write(line);
+		
+		// Write the GGA sentence
+		w.write(line + "\n");
 		
 		
 		while ((line = skipToNextGGA(r, w)) != null) {
+			
+			// line now has GGA sentence at start of next sequence. How long 
+			// to wait before echoing?
 			p = line.split(",");
 			Date logRecordTime = timeFormat.parse(p[1]);
 			long offsetFromStartOfLog = logRecordTime.getTime() - logStartTime.getTime();
 			long sysTimeOfNextRecord = sysTimeAtStartOfPlayback + offsetFromStartOfLog;
-			long delayNeeded = sysTimeOfNextRecord - System.currentTimeMillis();
-			//System.err.println ("delay=" + delayNeeded);
-			if (delayNeeded < 0 ) {
-				delayNeeded=0;
+			long delay = sysTimeOfNextRecord - System.currentTimeMillis();
+			if (delay < 0 ) {
+				delay=0;
 			}
-			Thread.sleep(delayNeeded);
+			Thread.sleep(delay);
+			
+			// Write GGA sentence
 			w.write(line + "\n");
 		}
 		
@@ -59,7 +69,7 @@ public class NMEAPlayback {
 	 * @return
 	 * @throws IOException
 	 */
-	private static String skipToNextGGA (BufferedReader r, Writer w) throws IOException {
+	private static final String skipToNextGGA (BufferedReader r, Writer w) throws IOException {
 		String line;
 		while (  (line = readNextNMEASentence(r)) != null) {
 			if (line.startsWith("$GPGGA")) {
@@ -73,6 +83,14 @@ public class NMEAPlayback {
 		}
 		return null;
 	}
+	
+	/**
+	 * Read next valid NMEA0183 sentence. Return null if end of file.
+	 * 
+	 * @param r
+	 * @return
+	 * @throws IOException
+	 */
 	
 	private static final String readNextNMEASentence (BufferedReader r) throws IOException {
 		
