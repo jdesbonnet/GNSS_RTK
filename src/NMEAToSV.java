@@ -3,8 +3,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
+/**
+ * Parse NMEA0183 file for $GPGSV and generate azimuth, elevation, SNR heat map.
+ * 
+ * @author Joe Desbonnet
+ *
+ */
 public class NMEAToSV {
 
 	public static void main (String arg[]) throws Exception {
@@ -28,6 +38,12 @@ public class NMEAToSV {
 		String timestamp=null;
 		
 		double pointFudgeFactor = 1;
+		
+		Set<Integer> svNumbers = new HashSet<>();
+		
+		// Use this to keep track of azimuth,altitude where the SV is at highest in sky
+		Map<Integer,AltAzi> peakAlt = new HashMap<>();
+
 		
 		while (  (line = r.readLine()) != null) { 
 			
@@ -59,16 +75,34 @@ public class NMEAToSV {
 			for (int i = 0; i < nrec; i++) {
 				// timestamp prn elevation azimuth snr
 				try {
-					int elevationInt = Integer.parseInt(p[i * 4 + 5]);
+					Integer svn = new Integer(p[i * 4 + 4]);
+					svNumbers.add(svn);
+					
+
+					
+					
+					int altitudeInt = Integer.parseInt(p[i * 4 + 5]);
 					int azimuthInt = Integer.parseInt(p[i * 4 + 6]);
 					int snr = Integer.parseInt( p[i * 4 + 7]);
 					
-					if (heatmap != null && elevationInt >= 0) {
-						heatmap[elevationInt][azimuthInt] += snr;
-						heatmapc[elevationInt][azimuthInt]++;
+					AltAzi altazi = peakAlt.get(svn);
+					if (altazi == null) {
+						altazi = new AltAzi();
+						peakAlt.put(svn, altazi);
+					}
+					if (altitudeInt > altazi.altitude) {
+						altazi.altitude = altitudeInt;
+						altazi.azimuth = azimuthInt;
 					}
 					
-					double elevation = (double)elevationInt;
+					
+					
+					if (heatmap != null && altitudeInt >= 0) {
+						heatmap[altitudeInt][azimuthInt] += snr;
+						heatmapc[altitudeInt][azimuthInt]++;
+					}
+					
+					double elevation = (double)altitudeInt;
 					double azimuth = (double)azimuthInt;
 					elevation += Math.random() * pointFudgeFactor - pointFudgeFactor / 2;
 					azimuth += Math.random() * pointFudgeFactor - pointFudgeFactor / 2;
@@ -107,17 +141,26 @@ public class NMEAToSV {
 			w2.close();
 		}
 		
+		// Display SV numbers encountered
+		for (Integer svNumber : peakAlt.keySet()) {
+			System.err.print("SV" + svNumber);
+			System.err.println(""
+					+ " " + peakAlt.get(svNumber).altitude 
+					+ " " + peakAlt.get(svNumber).azimuth
+					);
+		}
+		
 	}
 	
-	/**
-	 * Convert latitude/longitude format in NMEA0183 (ddmm.mmm) to decimal degrees.
-	 * Eg 5330.00 -> 53.5
-	 * @param degMin
-	 * @return
-	 */
-	private static double toDegrees (double degMin) {
-		int degrees = (int)(degMin/100);
-		double minutes = degMin - degrees*100;
-		return (double)degrees + minutes/60;
+	private static class AltAzi {
+		/**
+		 * Altitude (angle from horizon) of SV in degrees
+		 */
+		int altitude=0; // aka 'elevation'
+		
+		/**
+		 * Azimuth of SV in degrees
+		 */
+		int azimuth=0;
 	}
 }
