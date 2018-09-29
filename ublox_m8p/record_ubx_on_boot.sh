@@ -1,4 +1,7 @@
 #!/bin/bash
+# Add to /etc/rc.local:
+#   su pi -c "/home/pi/record_ubx_on_boot.sh" &
+#
 TS=`date +%Y%m%d-%H%M`
 STR2STR=/home/pi/RTKLIB/app/str2str/gcc/str2str
 ls -l /dev/tty* > script-starting-$TS
