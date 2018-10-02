@@ -36,8 +36,9 @@ public class UBX {
 
 		int outputFormat = BINARY;
 
-		List<String> payloadBytes = new ArrayList<>();
+		int[] bytes = new int[1024];
 
+		int nbytes = 0;
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals("-f")) {
 				String format = args[++i];
@@ -47,7 +48,7 @@ public class UBX {
 					outputFormat = PRINTF;
 				}
 			} else {
-				payloadBytes.add(args[i]);
+				bytes[nbytes++] = Integer.parseInt(args[i],16);
 			}
 		}
 
@@ -65,19 +66,18 @@ public class UBX {
 		}
 
 
-		for (String byteHex : payloadBytes) {
+		for (int i = 0; i < nbytes; i++) {
 
-			int hexv = Integer.parseInt(byteHex,16);
-			A += hexv;
+			A += bytes[i];
 			B += A;
 
 			switch (outputFormat) {
 			case BINARY:
-				System.out.write(hexv);
+				System.out.write(bytes[i]);
 				System.out.flush();
 				break;
 			case PRINTF:
-				System.out.print (String.format("\\x%02x",hexv));
+				System.out.print (String.format("\\x%02x",bytes[i]));
 				break;
 			}
 		}
