@@ -9,10 +9,16 @@
 
 #
 # Enable Survey Mode using CFG-TMODE3 (Class/ID 0x62 0x71).
-# Ref uBlox receiver manual 32.11.31.1
+# Ref uBlox 8/8M receiver manual section 32.11.31.1
 #
 
-!HEX B6 62  06 71 40  00 00 01 00  0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 0 0 80 00 00 00  00 80 00 00 0 0 0 0 0 0 0 0 B8 2A
+#!HEX B6 62  06 71 40  00 00 01 00  0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 0 0 80 00 00 00  00 80 00 00 0 0 0 0 0 0 0 0 B8 2A
+
+# CFG-TMODE3 surveyTime=128sec acc=16m
+#!HEX B5 62 06 71 28 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 00 00 00 00 71 02 00 00 00 00 00 00 00 00 00 93 A8
+
+# CFG-TMODE3 surveyTime=128sec acc=25m (for testing)
+!HEX B5 62 06 71 28 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 00 00 00 90 D0 03 00 00 00 00 00 00 00 00 00 83 87
 
 #
 # Enable RAW messages
@@ -27,6 +33,8 @@
 # turn on UBX TIM TM2 messages on USB
 !UBX CFG-MSG 13 3 0 0 0 1 0 0
 
+# turn on UBX NAV-SVIN (survey in data) on USB
+!UBX CFG-MSG  1 59  0 0 0 1 0 0
 
 #
 # Enable RTCM3.2 messages (1005, 1077, 1087, 1230) at 1Hz on USB
