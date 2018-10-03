@@ -8,5 +8,5 @@
 STR2STR=str2str
 PORT=$1
 DEVICE=$2
-${STR2STR} -in serial://${DEVICE}:230400#ubx -out tcpsvr://:22101 
+${STR2STR} -in serial://${DEVICE}:230400#ubx -out tcpsvr://:${PORT}
 

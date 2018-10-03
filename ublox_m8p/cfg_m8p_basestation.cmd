@@ -36,6 +36,12 @@
 # turn on UBX NAV-SVIN (survey in data) on USB
 !UBX CFG-MSG  1 59  0 0 0 1 0 0
 
+# turn on UBX NAV-SVINFO on USB
+!UBX CFG-MSG  1 48  0 0 0 1 0 0
+
+# turn non UBX NAV-SOL on USB
+!UBX CFG-MSG  1  6  0 0 0 1 0 0
+
 #
 # Enable RTCM3.2 messages (1005, 1077, 1087, 1230) at 1Hz on USB
 #
