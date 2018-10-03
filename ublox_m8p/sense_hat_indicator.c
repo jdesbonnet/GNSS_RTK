@@ -120,20 +120,24 @@ int main(int argc, char* args[])
 
 
 	while(fgets(buffer, 255, stdin)) {
-	if (strncmp("$GNGGA",buffer,6)==0) {
-		fprintf(stdout,"GGA=%s\n",buffer);
 
-		s = buffer;
-		for (i = 0; i < 6; i++) {
-			s = strchr(s, ',');
-			if (s == NULL) {
-				fprintf(stdout,"???\n");
-				break;
-			} else {
-				s++;
+		if (strncmp("$GNGGA",buffer,6)==0) {
+
+			fprintf(stdout,"%s",buffer);
+
+			// Find the fix type in the $GNGGA sentence
+			s = buffer;
+			for (i = 0; i < 6; i++) {
+				s = strchr(s, ',');
+				if (s == NULL) {
+					fprintf(stdout,"???\n");
+					break;
+				} else {
+					s++;
+				}
 			}
-		}
-		if (s != NULL) {
+	
+			if (s != NULL) {
 			switch (*s) {
 				case '0':
 				color = 3<<14; // red
@@ -149,9 +153,9 @@ int main(int argc, char* args[])
 				break;
 			}
 			color_fill(nline%2==0 ? 0 : color);
+			}
+			nline++;
 		}
-		nline++;
-	}
 	}
 
 	munmap(fb, 128);
