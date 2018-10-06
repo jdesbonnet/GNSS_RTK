@@ -15,6 +15,7 @@
 #!HEX B6 62  06 71 40  00 00 01 00  0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 0 0 80 00 00 00  00 80 00 00 0 0 0 0 0 0 0 0 B8 2A
 
 # CFG-TMODE3 surveyTime=128sec acc=16m
+#         CFG-TMODE3|v |  |flags|X or lat   |Y or lng   |Z or alt   |HX|HY|HZ|  |fixedPosAcc   |svinMinT   |svinAcc    |                       |Chksum
 #!HEX B5 62 06 71 28 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 00 00 00 00 71 02 00 00 00 00 00 00 00 00 00 93 A8
 
 # CFG-TMODE3 surveyTime=128sec acc=25m (for testing)
