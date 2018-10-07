@@ -12,14 +12,17 @@
 # Ref uBlox 8/8M receiver manual section 32.11.31.1
 #
 
-#!HEX B6 62  06 71 40  00 00 01 00  0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 0 0 80 00 00 00  00 80 00 00 0 0 0 0 0 0 0 0 B8 2A
-
 # CFG-TMODE3 surveyTime=128sec acc=16m
-#         CFG-TMODE3|v |  |flags|X or lat   |Y or lng   |Z or alt   |HX|HY|HZ|  |fixedPosAcc   |svinMinT   |svinAcc    |                       |Chksum
+#     |CFG-TMODE3|len  |v |r |flags|X or lat   |Y or lng   |Z or alt   |HX|HY|HZ|r |fixedPosAcc|svinMinT   |svinAcc    |                       |Chksum
 #!HEX B5 62 06 71 28 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 00 00 00 00 71 02 00 00 00 00 00 00 00 00 00 93 A8
 
 # CFG-TMODE3 surveyTime=128sec acc=25m (for testing)
-!HEX B5 62 06 71 28 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 00 00 00 90 D0 03 00 00 00 00 00 00 00 00 00 83 87
+#!HEX B5 62 06 71 28 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 00 00 00 90 D0 03 00 00 00 00 00 00 00 00 00 83 87
+
+# CFG-TMODE3: surveyTime=600s, svinAcc=1m
+#    |CFG-TMODE3|len  |v |r |flags|X or lat   |Y or lng   |Z or alt   |HX|HY|HZ|r |fixedPosAcc|svinMinT   |svinAcc    |                       |Chksum
+!HEX B5 62 06 71 28 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 58 02 00 00 10 27 00 00 00 00 00 00 00 00 00 00 31 C4
+
 
 #
 # Enable RAW messages

@@ -15,6 +15,7 @@ public class UBX {
 
 	private static final int BINARY=0;
 	private static final int PRINTF=1;
+	private static final int CHKSUM=2;
 
 	private static void usage () {
 		System.err.println("java UBX -format binary|printf byte0 byte1 byte2...");
@@ -46,6 +47,8 @@ public class UBX {
 					outputFormat = BINARY;
 				} else if ("printf".equals(format)) {
 					outputFormat = PRINTF;
+				} else if ("checksum".equals(format)) {
+					outputFormat = CHKSUM;
 				}
 			} else {
 				bytes[nbytes++] = Integer.parseInt(args[i],16);
@@ -82,6 +85,10 @@ public class UBX {
 			}
 		}
 
+
+		A &= 0xff;
+		B &= 0xff;
+
 		switch (outputFormat) {
 			case BINARY:
 				System.out.write (A & 0xff);
@@ -89,7 +96,10 @@ public class UBX {
 				System.out.flush();
 				break;
 			case PRINTF:
-				System.out.println (String.format("\\x%02x\\x%02x'",A&0xff,B&0xff));
+				System.out.println (String.format("\\x%02x\\x%02x'",A,B));
+				break;
+			case CHKSUM:
+				System.out.println (String.format("%02x %02x",A,B));
 				break;
 		}
 
