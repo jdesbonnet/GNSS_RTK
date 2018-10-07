@@ -10,6 +10,8 @@
 #
 # Enable Survey Mode using CFG-TMODE3 (Class/ID 0x62 0x71).
 # Ref uBlox 8/8M receiver manual section 32.11.31.1
+# Annoyingly there seems to be no support for a generic UBX packet. 
+# Therefore need to manually calculate checksum. 
 #
 
 # CFG-TMODE3 surveyTime=128sec acc=16m
@@ -18,6 +20,10 @@
 
 # CFG-TMODE3 surveyTime=128sec acc=25m (for testing)
 #!HEX B5 62 06 71 28 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 00 00 00 90 D0 03 00 00 00 00 00 00 00 00 00 83 87
+
+# CFG-TMODE3: surveyTime=600s, svinAcc=2m
+#     |CFG-TMODE3|len  |v |r |flags|X or lat   |Y or lng   |Z or alt   |HX|HY|HZ|r |fixedPosAcc|svinMinT   |svinAcc    |                       |Chksum
+#!HEX B5 62 06 71 28 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 58 02 00 00 20 4E 00 00 00 00 00 00 00 00 00 00 68 31
 
 # CFG-TMODE3: surveyTime=600s, svinAcc=1m
 #    |CFG-TMODE3|len  |v |r |flags|X or lat   |Y or lng   |Z or alt   |HX|HY|HZ|r |fixedPosAcc|svinMinT   |svinAcc    |                       |Chksum
