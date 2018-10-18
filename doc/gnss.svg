@@ -1,0 +1,53 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <circle r="100" id="c0_l" cy="100" cx="100"/>
+        <circle r="70" id="c0_r" cy="100" cx="250"/>
+        <clipPath id="c0_mask">
+            <use xlink:href="#c0_r" />
+        </clipPath>
+
+        <circle r="130" id="c1_l" cy="100" cx="100"/>
+        <circle r="100" id="c1_r" cy="100" cx="250"/>
+        <clipPath id="c1_mask">
+            <use xlink:href="#c1_r" />
+        </clipPath>
+
+        <circle r="160" id="c2_l" cy="100" cx="100"/>
+        <circle r="130" id="c2_r" cy="100" cx="250"/>
+        <clipPath id="c2_mask">
+            <use xlink:href="#c2_r" />
+        </clipPath>
+
+        <circle r="190" id="c3_l" cy="100" cx="100"/>
+        <circle r="160" id="c3_r" cy="100" cx="250"/>
+        <clipPath id="c3_mask">
+            <use xlink:href="#c3_r" />
+        </clipPath>
+
+
+    </defs>
+    <g>
+        <circle r="2" cy="100" cx="100"/>
+        <circle r="2" cy="100" cx="250"/>
+
+        <use xlink:href="#c3_l" id="center" fill="red" clip-path="url(#c3_mask)"/>
+        <use xlink:href="#c3_l" stroke-width="1.5" stroke="#000" fill="none"/>
+        <use xlink:href="#c3_r" stroke-width="1.5" stroke="#000" fill="none"/>
+
+        <use xlink:href="#c2_l" id="center" fill="orange" clip-path="url(#c2_mask)"/>
+        <use xlink:href="#c2_l" stroke-width="1.5" stroke="#000" fill="none"/>
+        <use xlink:href="#c2_r" stroke-width="1.5" stroke="#000" fill="none"/>
+
+        <use xlink:href="#c1_l" id="center" fill="yellow" clip-path="url(#c1_mask)"/>
+        <use xlink:href="#c1_l" stroke-width="1.5" stroke="#000" fill="none"/>
+        <use xlink:href="#c1_r" stroke-width="1.5" stroke="#000" fill="none"/>
+
+        <use xlink:href="#c0_l" id="center" fill="green" clip-path="url(#c0_mask)"/>
+        <use xlink:href="#c0_l" stroke-width="1.5" stroke="#000" fill="none"/>
+        <use xlink:href="#c0_r" stroke-width="1.5" stroke="#000" fill="none"/>
+
+
+
+
+    </g>
+</svg>
