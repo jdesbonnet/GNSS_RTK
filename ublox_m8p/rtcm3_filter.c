@@ -16,8 +16,9 @@ int main (int argc, char **argv) {
 		if (prevc == 0xD3 && (c&0xfc) == 0) {
 			fputc(0xD3,stdout);
 			fputc(c,stdout);
-			len = (c&0xfc)*256 + fgetc(stdin);
+			len = c*256 + fgetc(stdin);
 			fprintf (stderr," D3 %02x %02x", c, len&0xff);
+			fputc(len&0xff,stdout);
 			for (int i = 0; i < len+3; i++) {
 				c = fgetc(stdin);
 				fputc(c,stdout);
