@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+</head>
+
+<body>
+<svg id="svg" width="800" height="800">
+
+	<circle id="c0" cx="200" cy="200" r="150" stroke="black" stroke-width="2" fill="none" />
+	<circle id="c1" cx="500" cy="300" r="180" stroke="black" stroke-width="2" fill="none" />
+
+	<circle id="i0" cx="0" cy="0" r="2" stroke="blue" fill="blue" />
+	<circle id="i1" cx="0" cy="0" r="2" stroke="blue" fill="blue" />
+</svg>
+
+<script>
+var cx0=200,cy0=200,r0=20;
+var cx1=500,cy1=300,r1=150;
+
+var svgEl = document.getElementById("svg");
+var c0 = document.getElementById("c0");
+var c1 = document.getElementById("c1");
+var i0 = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+svg.appendChild(i0);
+var i1 = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+svg.appendChild(i1);
+
+var i = 0;
+setInterval(function() {
+
+	i += 1;
+
+	c0.setAttribute("r",r0+i);
+	c1.setAttribute("r",r1+i);
+
+	var intersections = intersectionsOfTwoCircles(cx0,cy0,r0+i, cx1,cy1,r1+i);
+
+	if (intersections == null) {
+		return;
+	}
+
+
+	i0.setAttribute("cx",intersections[0][0]);
+	i0.setAttribute("cy",intersections[0][1]);
+	i0.setAttribute("r",4);
+
+	i1.setAttribute("cx",intersections[1][0]);
+	i1.setAttribute("cy",intersections[1][1]);
+	i1.setAttribute("r",4);
+
+	var t0 = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+	t0.setAttribute("cx",intersections[0][0]);
+	t0.setAttribute("cy",intersections[0][1]);
+	t0.setAttribute("r",2);
+	t0.setAttribute("fill","green");
+	t0.setAttribute("stroke","green");
+	svgEl.appendChild(t0);
+
+	var t1 = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+	t1.setAttribute("cx",intersections[1][0]);
+	t1.setAttribute("cy",intersections[1][1]);
+	t1.setAttribute("r",2);
+	t1.setAttribute("fill","green");
+	t1.setAttribute("stroke","green");
+	svgEl.appendChild(t1);
+
+},20);
+
+
+
+
+/**
+ * http://www.ambrsoft.com/TrigoCalc/Circles2/circle2intersection/CircleCircleIntersection.htm
+ */
+function intersectionsOfTwoCircles(cx0,cy0,r0, cx1,cy1,r1) {
+
+	var a = cx0;
+	var b = cy0;
+	var c = cx1;
+	var d = cy1;
+
+	var D = Math.sqrt((c-a)*(c-a) + (d-b)*(d-b));
+
+	// Check conditions for intersection, return null if no intersection
+	if  ( ! ( (r0+r1 > D)  &&  (Math.abs(r0-r1) < D) )) {
+		return null;
+	}
+
+	var dd = Math.sqrt( (D+r0+r1)*(D+r0-r1)*(D-r0+r1)*(-D+r0+r1) ) / 4.0;
+
+	var x1 = ((a+c)/2) + (c-a)*(r0*r0 - r1*r1)/(2*D*D)  -  2*(b-d)*dd/(D*D);
+	var x2 = ((a+c)/2) + (c-a)*(r0*r0 - r1*r1)/(2*D*D)  +  2*(b-d)*dd/(D*D);
+	var y1 = ((b+d)/2) + (d-b)*(r0*r0 - r1*r1)/(2*D*D)  +  2*(a-c)*dd/(D*D);
+	var y2 = ((b+d)/2) + (d-b)*(r0*r0 - r1*r1)/(2*D*D)  -  2*(a-c)*dd/(D*D);
+
+	return [[x1,y1],[x2,y2]];
+}
+</script>
+</body>
+</html>
