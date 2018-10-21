@@ -4,29 +4,65 @@
 </head>
 
 <body>
-<svg id="svg" width="800" height="800">
-
-	<circle id="c0" cx="200" cy="200" r="150" stroke="black" stroke-width="2" fill="none" />
-	<circle id="c1" cx="500" cy="300" r="180" stroke="black" stroke-width="2" fill="none" />
-
-	<circle id="i0" cx="0" cy="0" r="2" stroke="blue" fill="blue" />
-	<circle id="i1" cx="0" cy="0" r="2" stroke="blue" fill="blue" />
+<svg id="svg" width="1200" height="800">
+	<image xlink:href="corrib.png" x="-600" /> 
 </svg>
 
+<button onclick="animateWavefront(300,120,130,  600,350,5)">R1 R2</button>
+<button onclick="animateWavefront(300,120,130,  60,670,5)">R1 R3</button>
 <script>
-var cx0=200,cy0=200,r0=20;
-var cx1=500,cy1=300,r1=150;
+var cx0=300,cy0=120,r0=130;
+var cx1=600,cy1=350,r1=5;
+
 
 var svgEl = document.getElementById("svg");
-var c0 = document.getElementById("c0");
-var c1 = document.getElementById("c1");
+
 var i0 = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
 svg.appendChild(i0);
 var i1 = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
 svg.appendChild(i1);
 
-var i = 0;
-setInterval(function() {
+
+var c0 = createWavefrontCircle("c0",cx0,cy0);
+svg.appendChild(c0);
+var center0 = createWavefrontCenterCircle("center0",cx0,cy0);
+svg.appendChild(center0);
+
+var c1 = createWavefrontCircle("c1",cx1,cy1);
+svg.appendChild(c1);
+var center1 = createWavefrontCenterCircle("center1",cx1,cy1);
+svg.appendChild(center1);
+
+var center0 = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+center0.setAttribute("cx",cx0);
+center0.setAttribute("cy",cy0);
+center0.setAttribute("r",4);
+center0.setAttribute("fill","black");
+svg.appendChild(center0);
+
+
+var center1 = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+center1.setAttribute("cx",cx1);
+center1.setAttribute("cy",cy1);
+center1.setAttribute("r",4);
+center1.setAttribute("fill","black");
+svg.appendChild(center1);
+
+
+function animateWavefront (cx0,cy0,r0, cx1, cy1, r1) {
+	var i = 0;
+
+	c0.setAttribute("cx",cx0);
+	c0.setAttribute("cy",cy0);
+	center0.setAttribute("cx",cx0);
+	center0.setAttribute("cy",cy0);
+
+	c1.setAttribute("cx",cx1);
+	c1.setAttribute("cy",cy1);
+	center1.setAttribute("cx",cx1);
+	center1.setAttribute("cy",cy1);
+
+	var interval = setInterval(function() {
 
 	i += 1;
 
@@ -52,22 +88,47 @@ setInterval(function() {
 	t0.setAttribute("cx",intersections[0][0]);
 	t0.setAttribute("cy",intersections[0][1]);
 	t0.setAttribute("r",2);
-	t0.setAttribute("fill","green");
-	t0.setAttribute("stroke","green");
+	t0.setAttribute("fill","red");
+	t0.setAttribute("stroke","red");
 	svgEl.appendChild(t0);
 
 	var t1 = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
 	t1.setAttribute("cx",intersections[1][0]);
 	t1.setAttribute("cy",intersections[1][1]);
 	t1.setAttribute("r",2);
-	t1.setAttribute("fill","green");
-	t1.setAttribute("stroke","green");
+	t1.setAttribute("fill","red");
+	t1.setAttribute("stroke","red");
 	svgEl.appendChild(t1);
 
-},20);
+	if (i>1000) {
+		clearInterval(interval);
+	}
+
+	},10);
+}
 
 
+function createWavefrontCircle (id,x,y) {
+	var c = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+	c.setAttribute("id",id);
+	c.setAttribute("cx",x);
+	c.setAttribute("cy",y);
+	c.setAttribute("r",0);
+	c.setAttribute("stroke","black");
+	c.setAttribute("stroke-width","2");
+	c.setAttribute("fill","none");
+	return c;
+}
 
+function createWavefrontCenterCircle(id,x,y) {
+	var c = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+	c.setAttribute("id",id);
+	c.setAttribute("cx",x);
+	c.setAttribute("cy",y);
+	c.setAttribute("r",4);
+	c.setAttribute("fill","black");
+	return c;
+}
 
 /**
  * http://www.ambrsoft.com/TrigoCalc/Circles2/circle2intersection/CircleCircleIntersection.htm
