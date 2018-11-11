@@ -10,7 +10,7 @@ rm -f rover-script-starting-* rover-tcm-in-* rover-tcpsrv-* rover-blink-*
 
 
 # wait for VPN
-sleep 2
+#sleep 2
 
 #${STR2STR} -in serial://ttyACM0:230400#ubx -out /home/pi/rover-${TS}.ubx -c /home/pi/cfg_m8p_raw_nmea.cmd >& /home/pi/rover-${TS}.log
 
