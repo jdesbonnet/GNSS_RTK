@@ -38,8 +38,33 @@
 
 
 # turn on UBX NAV-SVINFO on USB
-!UBX CFG-MSG  1 48  0 0 0 1 0 0
+!UBX CFG-MSG  1 48  0 1 0 1 0 0
 
 # turn non UBX NAV-SOL on USB
-!UBX CFG-MSG  1  6  0 0 0 1 0 0
+!UBX CFG-MSG  1  6  0 1 0 1 0 0
+
+#
+# Turn off all NMEA
+#
+
+# Turn off NMEA GGA
+!UBX CFG-MSG 240 0 0 0 0 0 0 0
+
+# Turn off NMEA GLL
+!UBX CFG-MSG 240 1 0 0 0 0 0 0
+
+# Turn off NMEA GSA
+!UBX CFG-MSG 240 2 0 0 0 0 0 0
+
+# Turn off NMEA GSV
+!UBX CFG-MSG 240 3 0 0 0 0 0 0
+
+# Turn off NMEA RMC
+!UBX CFG-MSG 240 4 0 0 0 0 0 0
+
+# Turn off NMEA VTG
+!UBX CFG-MSG 240 5 0 0 0 0 0 0
+
+# Turn off NMEA ZDA
+!UBX CFG-MSG 240 8 0 0 0 0 0 0
 
