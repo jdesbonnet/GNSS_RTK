@@ -1,0 +1,60 @@
+From: "Wiseman, Brad" <Brad.Wiseman@garmin.com>
+To: "'joe@local.ie'" <joe@local.ie>
+Subject: RE: Need access to phase info on GPS35-PC
+Date: Wed, 7 Jul 1999 16:33:13 -0500 
+X-Mailer: Internet Mail Service (5.5.2448.0)
+X-UIDL: 2ad2d9f248ca89b5ff2a41f30241b3ea
+
+The GPS35 PC does not implement both of the serial ports.  The raw data is
+available on port 2 which is not brought out to the DB-9 connector.  Here is
+a little-known fact that may be a solution for your application:  You can
+swap the ports under software control.
+
+If you send the following sentence to RXD1 when the port is sending out NMEA
+0183 data, the unit will swap ports 1 and 2, effectively replacing port 1
+with port 2:
+
+$PGRMO,,S<CR><LF>             where <CR><LF> are the two ASCII characters
+for carriage return and linefeed, respectively (0x0D,0x0A)
+
+If you wish to swap the ports back so that you can hear NMEA 0183 data
+again, send the following hexadecimal sequence to RXD1:
+
+10 0D 04 02 0D 00 00 E0 10 03
+
+You can also swap the ports back by cycling power to the unit.  It always
+comes up with RXD1 and TXD1 set to port 1.
+
+You can download the tech specs for the GPS35 LP series products from the
+following location:
+
+http://www.garmin.com/main/spec35.pdf
+
+While this spec was not written for the GPS35PC, appendix C of this document
+accurately describes the raw data formats that would appear at TXD1 once you
+swapped ports 1 and 2 with the PGRMO sentence described above.
+
+The GPS35PC only implements 4 signals:
+RXD1
+TXD1
+VIN
+GND
+
+It does not implement the other 4 signals available on the GPS35 LP series
+products:
+RXD2
+TXD2
+PWR_DN
+PPS
+
+The GPS35PC's internal design is identical to the GPS35-HVS.  It just has a
+different cable coming out of the receiver body.  The main advantage of the
+GPS35PC is that it already has common connectors attached.  The GPS35-HVS is
+terminated in 8 tinned, stripped wires to which you may add your own
+connectors.
+
+Regards,
+Brad Wiseman
+OEM Products Field Engineer
+
+
