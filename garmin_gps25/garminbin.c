@@ -168,7 +168,6 @@ void read_rcv_record (unsigned char *buf)
 	 continue;
       }
 
-      /*
       fprintf (stderr,"%1d sv[%2d] SV=%2d cycles=%10d phase=%4d pr=%16lf snr=%2d\n",
 	      rcv_rec.sv[i].valid,
 	      i,
@@ -177,7 +176,6 @@ void read_rcv_record (unsigned char *buf)
 	      (int)rcv_rec.sv[i].phase,
 	      rcv_rec.sv[i].pr,
 	      (int)rcv_rec.sv[i].snr);
-       */
    }
 }
 
