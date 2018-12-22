@@ -1,7 +1,19 @@
-/* Code to read Garmin GPS 25/35LP binary output
- * V0.1
+/* Utility to read Garmin GPS 25/35LP binary output
+ *
+ * V0.2  (22 Dec 2018)
+ * Fixes to binary stream parsing. Fixes to PVT record.
+ * 
+ * V0.1  (4 Nov 1998)
+ * First release
  * Joe Desbonnet, joe@wombat.ie
  * 4 Nov 1998
+ *
+ * 
+ * Garmin packet structure:
+ *     header: DLE (0x10), RecordID (uint8),  length in bytes (uint8)
+ *     data: 
+ *     checksum (int8): 2's complement sum of bytes between delimeters
+ *     DLE (0x10) , ETX (0x03)
  *
  * Thanks to  Sam Storm van Leeuwen <samsvl@nlr.nl> for providing me 
  * with some sample Garmin binary data.
@@ -20,6 +32,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 /* Special characters in data stream.  
  * Also used to identify data stream state.  */
@@ -80,7 +93,7 @@ int get_data_byte (FILE *fp);
 
 /* Globals: Used to save data stream state and chksum for get_data_byte() */
 int state=DAT;
-unsigned char chksum=0;
+int8_t chksum=0;
 
 /* Main Program */
 void main (int argc, char **argv) {
@@ -89,9 +102,15 @@ void main (int argc, char **argv) {
    cpo_rcv_type rcv_rec;
 
    do {
-      /* Read record type and act accordingly */
 
-      fprintf (stderr,"Checksum = %x\n",(int)chksum);
+
+      /* skip to start of packet */
+      while (state != DAT && !feof(stdin) ) {
+        rec_type = get_data_byte(stdin);
+      }
+
+      chksum=rec_type;
+
       rec_type = get_data_byte(stdin);
       rec_len = get_data_byte(stdin);
       switch (rec_type) {
@@ -101,7 +120,7 @@ void main (int argc, char **argv) {
 	 read_rcv_record(buf);
 	 break;
        case POS_REC:
-	 /* fprintf (stderr,"Position record found.\n"); */
+	 fprintf (stderr,"Position record found.\n");
 	 retrieve_record(buf,rec_len,stdin);
 	 read_pvt_record(buf);
 	 break;
@@ -112,8 +131,8 @@ void main (int argc, char **argv) {
 	 
        default:
 	 fprintf (stderr,"Unrecognized record type %d\n",c);
-	 retrieve_record(buf,rec_len,stdin);
-	 exit(2);
+	 //retrieve_record(buf,rec_len,stdin);
+	 //exit(2);
 	 break;
       }
    
@@ -127,7 +146,7 @@ int retrieve_record (unsigned char *buf, int length, FILE *fp)
    int i;
 
    /* reset checksum counter used in get_data_byte (this is a global!) */
-   chksum=0;
+   //chksum= length;
    
    for (i=0; i<length; i++) {
       buf[i] = get_data_byte (fp);
@@ -135,6 +154,7 @@ int retrieve_record (unsigned char *buf, int length, FILE *fp)
    }
    
    checksum = get_data_byte (fp);
+   fprintf(stderr,"CHECKSUM: %x vs %x (%d)\n", checksum, chksum, checksum - chksum);
    
 }
 
@@ -192,8 +212,8 @@ void read_pvt_record (unsigned char *buf)
    pvt_rec.epv = *((float *)&buf[12]);
    pvt_rec.fix = *((short *)&buf[16]);
    pvt_rec.gps_tow = *((double *)&buf[18]);
-   pvt_rec.lon = *((double *)&buf[26]);
-   pvt_rec.lat = *((double *)&buf[34]);
+   pvt_rec.lat = *((double *)&buf[26]);
+   pvt_rec.lon = *((double *)&buf[34]);
    pvt_rec.lon_vel = *((float *)&buf[42]);
    pvt_rec.lat_vel = *((float *)&buf[46]);
    pvt_rec.alt_vel = *((float *)&buf[50]);
@@ -205,10 +225,19 @@ void read_pvt_record (unsigned char *buf)
 	    pvt_rec.eph,
 	    pvt_rec.epv);
     */
-   printf ("%lf %d %lf %lf %f %f %f\n",
+
+   double lat = pvt_rec.lat * 180 / M_PI;
+   double lon = pvt_rec.lon * 180 / M_PI;
+
+   if (lat < -90 || lat > 90 || lon < -180 || lon > 180 ) {
+      fprintf(stderr,"lat %f out of range\n",lat);
+      return;
+   }
+
+   printf ("PVT %lf %d %lf %lf %f %f %f\n",
 	   pvt_rec.gps_tow,
 	   pvt_rec.fix,
-	   pvt_rec.lat*180,pvt_rec.lon*180,pvt_rec.alt,
+	   lat,lon,pvt_rec.alt,
 	   pvt_rec.lat_vel, pvt_rec.lon_vel);
    
 }
@@ -242,7 +271,7 @@ void display_record (cpo_rcv_type *rcv_rec)
  * 'state' to preserve data stream state. Don't particularly like using
  * globals but 'till do for the moment.
  * 
- * This code is taken almost verbatin from the Garmin GPS 25LP manual.
+ * This code is taken almost verbatim from the Garmin GPS 25LP manual.
  */
 
 int get_data_byte (FILE *fp) 
@@ -251,6 +280,7 @@ int get_data_byte (FILE *fp)
    while (!feof(fp)) {
       c = getc(stdin);
       chksum +=c ;
+      //fprintf (stderr,"byte=%x chksum=%d\n",c,(int)chksum);
       if (state == DAT) {
 	 if (c == DLE) {
 	    state=DLE;
