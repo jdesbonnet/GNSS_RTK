@@ -9,6 +9,6 @@ netcat localhost 21102 > base-${TS}.ubx &
 
 # Make RTCM3 available on port 21101
 echo "Starting RTCM3 server on port 21101"
-netcat localhost 21102 | ./rtcm3_filter | ${STR2STR} -out tcpsvr://:21101
+netcat localhost 21102 | ./../src/rtcm3_filter | ${STR2STR} -out tcpsvr://:21101
 
 
