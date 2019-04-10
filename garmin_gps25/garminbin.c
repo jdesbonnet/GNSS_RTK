@@ -6,7 +6,7 @@
  * V0.1  (4 Nov 1998)
  * First release
  * Joe Desbonnet, joe@wombat.ie
- * 4 Nov 1998
+ *
  *
  * 
  * Garmin packet structure:
@@ -230,7 +230,12 @@ void read_pvt_record (unsigned char *buf)
    double lon = pvt_rec.lon * 180 / M_PI;
 
    if (lat < -90 || lat > 90 || lon < -180 || lon > 180 ) {
-      fprintf(stderr,"lat %f out of range\n",lat);
+      fprintf(stderr,"lat/lon %f out of range\n",lat);
+      return;
+   }
+
+   if (pvt_rec.gps_tow<0 || pvt_rec.gps_tow>604800) {
+      fprintf(stderr,"tow %f out of range\n", pvt_rec.gps_tow);
       return;
    }
 
