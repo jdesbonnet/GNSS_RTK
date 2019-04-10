@@ -24,28 +24,39 @@ int main (int argc, char **argv) {
 	while (!feof(stdin)) {
 		c = fgetc(stdin);
 		if (prevc == 0xB5 && c == 0x62) {
+
+			// Found UBX start of frame 
 			fputc(0xB5,stdout);
 			fputc(0x62,stdout);
 			if (hexout) {
-				fprintf (stderr,"B5 62 ");
+				fprintf (stderr,"\n**B5 62 ");
 			}
+
+			// Read class
 			c = fgetc(stdin);
 			fputc(c,stdout);
 			if (hexout) {
-				fprintf (stderr,"%02x ", c);
+				fprintf (stderr,"class=%02x ", c);
 			}
+
+			// Read ID
 			c = fgetc(stdin);
 			fputc(c,stdout);
 			if (hexout) {
-				fprintf (stderr,"%02x ", c);
+				fprintf (stderr,"id=%02x ", c);
 			}
-			len = fgetc(stdin)*256 + fgetc(stdin);
+
+			// Read length
+			len = fgetc(stdin) + fgetc(stdin)*256;
+			if (hexout) {
+				fprintf(stderr,"len=%d ",len);
+			}
 			// payload + 2 bytes CRC
 			for (int i = 0; i < len+2; i++) {
 				c = fgetc(stdin);
 				fputc(c,stdout);
 				if (hexout) {
-					fprintf (stderr," %02x", c);
+					fprintf (stderr,"%02x ", c);
 				}
 			}
 			fflush(stdout);	
