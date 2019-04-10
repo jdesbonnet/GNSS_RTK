@@ -18,7 +18,7 @@ public class UBX {
 	private static final int CHKSUM=2;
 
 	private static void usage () {
-		System.err.println("java UBX -format binary|printf byte0 byte1 byte2...");
+		System.err.println("java UBX -f binary|printf byte0 byte1 byte2...");
 		System.err.println("");
 		System.err.println("Example:");
 		System.err.println("java UBX -format binary 05 01 03");
