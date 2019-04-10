@@ -29,21 +29,21 @@ int main (int argc, char **argv) {
 			fputc(0xB5,stdout);
 			fputc(0x62,stdout);
 			if (hexout) {
-				fprintf (stderr,"\n**B5 62 ");
+				fprintf (stderr,"B5 62 ");
 			}
 
 			// Read class
 			c = fgetc(stdin);
 			fputc(c,stdout);
 			if (hexout) {
-				fprintf (stderr,"class=%02x ", c);
+				fprintf (stderr,"%02x ", c);
 			}
 
 			// Read ID
 			c = fgetc(stdin);
 			fputc(c,stdout);
 			if (hexout) {
-				fprintf (stderr,"id=%02x ", c);
+				fprintf (stderr,"%02x ", c);
 			}
 
 			// Read length
@@ -51,6 +51,7 @@ int main (int argc, char **argv) {
 			if (hexout) {
 				fprintf(stderr,"len=%d ",len);
 			}
+
 			// payload + 2 bytes CRC
 			for (int i = 0; i < len+2; i++) {
 				c = fgetc(stdin);
