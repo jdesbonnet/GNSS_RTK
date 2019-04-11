@@ -16,7 +16,10 @@
 
 // UBX-NAV-SVIN payload structure. 
 typedef struct {
-	uint32_t reserved;
+	uint8_t version;
+	uint8_t reserved0;	
+	uint8_t reserved1;
+	uint8_t reserved2;	
 
 	uint32_t iTOW;
 
@@ -28,7 +31,17 @@ typedef struct {
 	int32_t meanZ;
 
 	int8_t meanXHP;
+	int8_t meanYHP;	
+	int8_t meanZHP;
+	uint8_t reserved3;
 
+	uint32_t meanAcc;
+	uint32_t obs;
+
+	uint8_t valid;
+	uint8_t active;
+	uint8_t reserved4;
+	uint8_t reserved5;
 } nav_svin_t;
 
 int main (int argc, char **argv) {
@@ -65,11 +78,11 @@ int main (int argc, char **argv) {
 			fread (&navsvin, sizeof(nav_svin_t), 1,stdin);
 
 
-			fprintf (stdout, "%u  %d  %f %f %f %d\n", 
+			fprintf (stdout, "t=%u  dur=%d  x=%d y=%d z=%d  acc=%d obs=%d valid=%d\n", 
 				navsvin.iTOW, 
 				navsvin.dur,
 				navsvin.meanX, navsvin.meanY, navsvin.meanZ,
-				navsvin.meanXHP);
+				navsvin.meanAcc, navsvin.obs, navsvin.valid);
 		}
 		
 	}
