@@ -78,11 +78,11 @@ int main (int argc, char **argv) {
 			fread (&navsvin, sizeof(nav_svin_t), 1,stdin);
 
 
-			fprintf (stdout, "t=%u  dur=%d  x=%d y=%d z=%d  acc=%d obs=%d valid=%d\n", 
+			fprintf (stdout, "t=%u  dur=%d  x=%d y=%d z=%d  acc=%d obs=%d valid=%d active=%d\n", 
 				navsvin.iTOW, 
 				navsvin.dur,
 				navsvin.meanX, navsvin.meanY, navsvin.meanZ,
-				navsvin.meanAcc, navsvin.obs, navsvin.valid);
+				navsvin.meanAcc, navsvin.obs, navsvin.valid,navsvin.active);
 		}
 		
 	}
