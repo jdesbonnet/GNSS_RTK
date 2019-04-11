@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <math.h>
 
 #define PI 3.14159265359
@@ -12,7 +13,6 @@
  * 
  * @author Joe Desbonnet
  */
-
 
 	
 // UBX-CFG-TMODE3 payload structure. 
@@ -60,20 +60,50 @@ uint32_t ubx_checksum (uint8_t payload[], int length) {
 	return ((A<<8)|B);
 }
 
+void usage (char *p) {
+	fprintf(stderr,"%s <min_time_s> <accuracy_m>\n", p);
+}
+
 int main (int argc, char **argv) {
-	int i, len, c, prevc;
+	int i;
+	
+	int min_time=120;
+
+	// Accuracy in 0.1mm units
+	int accuracy=10*10000;
+
+	if (argc < 3) {
+		usage(argv[0]);
+		return 0;
+	}
+
+	int binary_flag = 0;
+	int arg_count = 0;
+	for (i = 1; i < argc; i++) {
+		if (argv[i][0]=='-' && argv[i][1]=='b') {
+			binary_flag=1;
+		} else {
+			switch (arg_count) {
+				case 0: 
+					min_time = atoi(argv[i]);
+					break;
+				case 1:
+					accuracy = atoi(argv[i]);
+					break;
+			}
+			arg_count++;
+		}
+	}
+
+
+	//fprintf (stderr,"min_time=%x accuracy=%x\n", min_time, accuracy);
 
 	// Initialize all zero
 	cfg_tmode3_t tmode3 = {0};
 
 	tmode3.flags = 1;
-	tmode3.svinMinDur = 128;
-	tmode3.svinAccLimit = 16*10000;
-
-
-
-
-
+	tmode3.svinMinDur = min_time;
+	tmode3.svinAccLimit = accuracy * 10000;
 
 	struct {
 		uint8_t msg_class;
@@ -90,9 +120,17 @@ int main (int argc, char **argv) {
 
 	uint32_t checksum = ubx_checksum(buf, sizeof(ubx_frame));
 
-	for (int i = 0; i < sizeof(ubx_frame); i++) {
-		fprintf (stdout, "%02x ", buf[i]);
+	if (binary_flag) {
+		fputc(0xB5,stdout);
+		fputc(0x62,stdout);
+		fwrite(&ubx_frame, sizeof(ubx_frame),1,stdout);
+		fputc((checksum>>8)&0xff, stdout);
+		fputc(checksum&0xff, stdout);
+	} else {
+		fprintf(stdout,"B5 62");
+		for (int i = 0; i < sizeof(ubx_frame); i++) {
+			fprintf (stdout, " %02x", buf[i]);
+		}
+		fprintf(stdout," %02x %02x\n",(checksum>>8)&0xff, checksum&0xff);
 	}
-	fprintf (stdout, "checksum=%x",checksum);
-	fprintf (stdout,"\n");
 }
