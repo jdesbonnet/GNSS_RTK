@@ -27,7 +27,7 @@
 
 # CFG-TMODE3: surveyTime=600s, svinAcc=1m
 #    |CFG-TMODE3|len  |v |r |flags|X or lat   |Y or lng   |Z or alt   |HX|HY|HZ|r |fixedPosAcc|svinMinT   |svinAcc    |                       |Chksum
-!HEX B5 62 06 71 28 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 58 02 00 00 10 27 00 00 00 00 00 00 00 00 00 00 31 C4
+#!HEX B5 62 06 71 28 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 58 02 00 00 10 27 00 00 00 00 00 00 00 00 00 00 31 C4
 
 
 #

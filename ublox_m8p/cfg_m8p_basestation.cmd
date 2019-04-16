@@ -65,7 +65,7 @@
 # Enable RTCM message 1087 (GLONASS MSM7). Class/ID 0xF5 0x57
 !UBX CFG-MSG 245  87  0 0 0 1 0 0
 
-# Enable RTCM message 1005 (GLONASS code-phase biases). Class/ID 0xF5 0xE6
+# Enable RTCM message 1230 (GLONASS code-phase biases). Class/ID 0xF5 0xE6
 !UBX CFG-MSG 245 230  0 0 0 1 0 0
 
 
