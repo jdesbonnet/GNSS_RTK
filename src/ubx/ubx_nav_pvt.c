@@ -38,8 +38,8 @@ typedef struct {
 	uint8_t numSv;
 
 	// x 1e-7
-	int32_t lat;
 	int32_t lon;
+	int32_t lat;
 
 	// mm
 	int32_t height;
@@ -108,7 +108,7 @@ int main (int argc, char **argv) {
 			fread (&navpvt, sizeof(nav_pvt_t), 1,stdin);
 
 			fprintf (stdout, "%u    %f %f %f  \n", navpvt.iTOW, 
-				navpvt.lat/1e-7, navpvt.lon/1e-7, navpvt.height/1e-3
+				navpvt.lat*1e-7, navpvt.lon*1e-7, navpvt.height*1e-3
 				);
 		}
 		
