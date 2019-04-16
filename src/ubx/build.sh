@@ -8,6 +8,7 @@ if [ ! -e libswiftnav ] ; then
 	cd ../..
 fi
 
+gcc -o ubx_nav_pvt ubx_nav_pvt.c
 gcc -I ./libswiftnav/include -L ./libswiftnav/build -o ubx_nav_sol ubx_nav_sol.c  -lswiftnav -lm
 
 
