@@ -3,22 +3,15 @@
 TS=`date +%Y%m%d-%H%M`
 STR2STR=/home/pi/RTKLIB/app/str2str/gcc/str2str
 
-
 touch rover-started-${TS}.log
 
 rm -f rover-script-starting-* rover-tcm-in-* rover-tcpsrv-* rover-blink-*
 
-
-# wait for VPN
-#sleep 2
-
-#${STR2STR} -in serial://ttyACM0:230400#ubx -out /home/pi/rover-${TS}.ubx -c /home/pi/cfg_f9p_raw_nmea.cmd >& /home/pi/rover-${TS}.log
-
-SERVER=10.7.0.53
+BASE=10.7.0.42
 DEVICE=/dev/ttyACM0
 
 # Read RTCM from base station and send to GNSS receiver
-${STR2STR} -in tcpcli://${SERVER}:21101 -out file://${DEVICE} >& rover-rtcm-in-${TS}.log &
+${STR2STR} -in tcpcli://${BASE}:21101 -out file://${DEVICE} >& rover-rtcm-in-${TS}.log &
 sleep 2
 
 # Make roving GNSS data available 
