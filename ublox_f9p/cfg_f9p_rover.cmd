@@ -25,6 +25,6 @@
 # turn on UBX NAV-PVT on USB
 !UBX CFG-MSG  1  7  0 0 0 1 0 0
 
-# Set sample rate 4Hz
-!UBX CFG-RATE 250 1 1
+# Set sample rate 8Hz
+!UBX CFG-RATE 125 1 1
 
