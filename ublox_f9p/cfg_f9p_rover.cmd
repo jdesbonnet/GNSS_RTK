@@ -22,8 +22,8 @@
 # turn on UBX NAV-SVINFO on USB
 !UBX CFG-MSG  1 48  0 0 0 1 0 0
 
-# turn on UBX NAV-SOL on USB
-!UBX CFG-MSG  1  6  0 0 0 1 0 0
+# turn on UBX NAV-PVT on USB
+!UBX CFG-MSG  1  7  0 0 0 1 0 0
 
 # Set sample rate 4Hz
 !UBX CFG-RATE 250 1 1
