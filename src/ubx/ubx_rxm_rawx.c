@@ -73,17 +73,18 @@ int main (int argc, char **argv) {
 			len = fgetc(stdin);
 			len |= fgetc(stdin)<<8;
 
-			fprintf (stderr,"len=%d nmeas=%d\n", len, (len-16)/32);
+			//fprintf (stderr,"len=%d nmeas=%d\n", len, (len-16)/32);
 
 			// Read RXM-RAWX header
 			fread (&rxm_rawx_header, sizeof(ubx_rxm_rawx_header_t), 1,stdin);
 
-			fprintf (stderr,"tow=%f nmeas=%d\n", rxm_rawx_header.rcvTow, rxm_rawx_header.numMeas);
+			fprintf (stdout,"tow=%f nmeas=%d\n", rxm_rawx_header.rcvTow, rxm_rawx_header.numMeas);
 
 			fread (rxm_rawx_meas, sizeof(ubx_rxm_rawx_meas_t), rxm_rawx_header.numMeas,stdin);
 
 			for (i = 0; i < rxm_rawx_header.numMeas; i++) {
-				fprintf(stdout, "%d %d %d  %f %f %f\n", 
+				fprintf(stdout, "%f sv=%d gnssId=%d %d  %f %f %f\n", 
+					rxm_rawx_header.rcvTow,
 					rxm_rawx_meas[i].svId,
 					rxm_rawx_meas[i].gnssId,
 					rxm_rawx_meas[i].trkStat,
