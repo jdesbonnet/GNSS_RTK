@@ -65,6 +65,8 @@ uint16_t checksum_get() {
 int main (int argc, char **argv) {
 	int i, len, c, prevc;
 	uint16_t checksum;
+	uint32_t frame_count = 0;
+	uint32_t checksum_fail_count = 0;
 
 	int hexout = 0;
 	for (i = 0; i < argc; i++) {
@@ -90,6 +92,8 @@ int main (int argc, char **argv) {
 		// Check for start of UBX-RXM-RAWX message
 		if (shift == 0xB5620215) {
 
+			frame_count++;
+
 			checksum_reset();
 			checksum_update(0x02);
 			checksum_update(0x15);
@@ -114,6 +118,17 @@ int main (int argc, char **argv) {
 			fread (&rxm_rawx_meas, sizeof(ubx_rxm_rawx_meas_t), rxm_rawx_header.numMeas, stdin);
 			checksum_update_block((uint8_t*)&rxm_rawx_meas, sizeof(ubx_rxm_rawx_meas_t) * rxm_rawx_header.numMeas);
 
+			// Read frame checksum and compare with computed value
+                        checksum = fgetc(stdin)<<8;
+                        checksum |= fgetc(stdin);
+
+			if (checksum != checksum_get()) {
+				fprintf (stderr,"ERROR checksum mismatch: %x vs %x\n", checksum, checksum_get());
+				checksum_fail_count++;
+				continue;
+			}
+
+
 			for (i = 0; i < rxm_rawx_header.numMeas; i++) {
 				fprintf(stdout, "%f sv=%d gnssId=%d %d  %f %f %f\n", 
 					rxm_rawx_header.rcvTow,
@@ -127,19 +142,11 @@ int main (int argc, char **argv) {
 				);
 			}
 
-			checksum = fgetc(stdin)<<8;
-			checksum |= fgetc(stdin);
-
-			if (checksum == checksum_get()) {
-				//fprintf (stdout, "OK\n");
-			} else {
-				//fprintf (stdout, "ERR\n");
-				fprintf (stderr,"ERROR checksum mismatch: %x vs %x\n", checksum, checksum_get());
-			}
-
 
 		}
 		
 	}
+
+	fprintf (stderr,"frames=%d checksum_fail_count=%d\n", frame_count, checksum_fail_count);
 
 }
