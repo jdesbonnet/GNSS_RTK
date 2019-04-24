@@ -83,14 +83,16 @@ int main (int argc, char **argv) {
 			fread (rxm_rawx_meas, sizeof(ubx_rxm_rawx_meas_t), rxm_rawx_header.numMeas,stdin);
 
 			for (i = 0; i < rxm_rawx_header.numMeas; i++) {
-				fprintf(stdout, "%f sv=%d gnssId=%d %d  %f %f %f\n", 
+				fprintf(stdout, "%f gnssId=%d sigId=%d svId=%d  %d  %f %f %f %d\n", 
 					rxm_rawx_header.rcvTow,
-					rxm_rawx_meas[i].svId,
 					rxm_rawx_meas[i].gnssId,
+					rxm_rawx_meas[i].sigId,
+					rxm_rawx_meas[i].svId,
 					rxm_rawx_meas[i].trkStat,
 					rxm_rawx_meas[i].pr,
 					rxm_rawx_meas[i].cp,
-					rxm_rawx_meas[i].doppler
+					rxm_rawx_meas[i].doppler,
+					rxm_rawx_meas[i].cno
 		
 				);
 			}
