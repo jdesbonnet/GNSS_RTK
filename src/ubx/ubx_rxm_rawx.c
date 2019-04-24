@@ -41,8 +41,30 @@ typedef struct {
 	uint8_t reserved[2];
 } ubx_rxm_rawx_header_t;
 
+
+static uint32_t A,B;
+
+void checksum_reset () {
+	A = B = 0;
+}
+void checksum_update (uint8_t c) {
+	A += c;
+	B += A;
+}
+void checksum_update_block(uint8_t *buf, int len) {
+	int i = 0;
+	for (i = 0; i < len; i++) {
+		checksum_update(*buf);
+		buf++;
+	}
+}
+uint16_t checksum_get() {
+	return ((A&0xff)<<8) | (B&0xff);	
+}
+
 int main (int argc, char **argv) {
 	int i, len, c, prevc;
+	uint16_t checksum;
 
 	int hexout = 0;
 	for (i = 0; i < argc; i++) {
@@ -59,7 +81,6 @@ int main (int argc, char **argv) {
 	ubx_rxm_rawx_meas_t rxm_rawx_meas[128];
 
 
-
 	while (!feof(stdin)) {
 		c = fgetc(stdin) & 0xff;
 
@@ -69,18 +90,29 @@ int main (int argc, char **argv) {
 		// Check for start of UBX-RXM-RAWX message
 		if (shift == 0xB5620215) {
 
-			// Skip 2 byte length field
-			len = fgetc(stdin);
-			len |= fgetc(stdin)<<8;
+			checksum_reset();
+			checksum_update(0x02);
+			checksum_update(0x15);
+
+			c = fgetc(stdin);
+			checksum_update(c);
+			len = c;
+			c = fgetc(stdin);
+			checksum_update(c);
+			len |= c<<8;
 
 			//fprintf (stderr,"len=%d nmeas=%d\n", len, (len-16)/32);
 
 			// Read RXM-RAWX header
-			fread (&rxm_rawx_header, sizeof(ubx_rxm_rawx_header_t), 1,stdin);
+			fread (&rxm_rawx_header, sizeof(ubx_rxm_rawx_header_t), 1, stdin);
+			checksum_update_block((uint8_t*)&rxm_rawx_header,sizeof(ubx_rxm_rawx_header_t));
 
-			fprintf (stdout,"tow=%f nmeas=%d\n", rxm_rawx_header.rcvTow, rxm_rawx_header.numMeas);
+			//fprintf (stdout,"tow=%f nmeas=%d\n", rxm_rawx_header.rcvTow, rxm_rawx_header.numMeas);
 
-			fread (rxm_rawx_meas, sizeof(ubx_rxm_rawx_meas_t), rxm_rawx_header.numMeas,stdin);
+			// TODO: check if numMeas>128
+
+			fread (&rxm_rawx_meas, sizeof(ubx_rxm_rawx_meas_t), rxm_rawx_header.numMeas, stdin);
+			checksum_update_block((uint8_t*)&rxm_rawx_meas, sizeof(ubx_rxm_rawx_meas_t) * rxm_rawx_header.numMeas);
 
 			for (i = 0; i < rxm_rawx_header.numMeas; i++) {
 				fprintf(stdout, "%f sv=%d gnssId=%d %d  %f %f %f\n", 
@@ -94,6 +126,17 @@ int main (int argc, char **argv) {
 		
 				);
 			}
+
+			checksum = fgetc(stdin)<<8;
+			checksum |= fgetc(stdin);
+
+			if (checksum == checksum_get()) {
+				//fprintf (stdout, "OK\n");
+			} else {
+				//fprintf (stdout, "ERR\n");
+				fprintf (stderr,"ERROR checksum mismatch: %x vs %x\n", checksum, checksum_get());
+			}
+
 
 		}
 		
