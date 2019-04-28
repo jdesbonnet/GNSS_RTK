@@ -44,6 +44,9 @@ typedef struct {
 
 static uint32_t A,B;
 
+// F9P receiver description, appendix B
+static const char gnss_id_prefix[] = {'G','X','G','C','X','Q','R'};
+
 void checksum_reset () {
 	A = B = 0;
 }
@@ -67,6 +70,12 @@ int main (int argc, char **argv) {
 	uint16_t checksum;
 	uint32_t frame_count = 0;
 	uint32_t checksum_fail_count = 0;
+
+	int flag_pr_valid;
+	int flag_cp_valid;
+	int flag_hc_valid;
+	int flag_hc_sub;
+	int trkstat;
 
 	int hexout = 0;
 	for (i = 0; i < argc; i++) {
@@ -130,12 +139,19 @@ int main (int argc, char **argv) {
 
 
 			for (i = 0; i < rxm_rawx_header.numMeas; i++) {
-				fprintf(stdout, "%f gnssId=%d sigId=%d svId=%d  %d  %f %f %f %d\n", 
+
+				trkstat = rxm_rawx_meas[i].trkStat;
+				flag_pr_valid = trkstat & (1<<0) ? 1:0;
+				flag_cp_valid = trkstat & (1<<1) ? 1:0;
+				flag_hc_valid = trkstat & (1<<2) ? 1:0;
+				flag_hc_sub   = trkstat & (1<<3) ? 1:0;
+
+				fprintf(stdout, "%f %c%02d %d  %d %d %d %d  %f %f %f %d\n", 
 					rxm_rawx_header.rcvTow,
-					rxm_rawx_meas[i].gnssId,
-					rxm_rawx_meas[i].sigId,
+					gnss_id_prefix[rxm_rawx_meas[i].gnssId],
 					rxm_rawx_meas[i].svId,
-					rxm_rawx_meas[i].trkStat,
+					rxm_rawx_meas[i].sigId,
+					flag_pr_valid, flag_cp_valid, flag_hc_valid, flag_hc_sub,
 					rxm_rawx_meas[i].pr,
 					rxm_rawx_meas[i].cp,
 					rxm_rawx_meas[i].doppler,
