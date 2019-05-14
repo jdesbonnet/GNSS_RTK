@@ -52,7 +52,11 @@ void main (int argc, char **argv) {
 		// Get timestamp of record
 		clock_gettime(CLOCK_REALTIME, &ts);
 
-		printf ("%d.%09d %s", (int)ts.tv_sec, (int)ts.tv_nsec, buf);
+		if (strlen(s)==0) {
+			continue;
+		}
+
+		printf ("%d.%09d %s\n", (int)ts.tv_sec, (int)ts.tv_nsec, buf);
 		fflush(stdout);
 	}
 
