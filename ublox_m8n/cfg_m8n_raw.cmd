@@ -35,10 +35,10 @@
 
 
 
-# enable TRK-SFRBX03x0F
+# enable TRK-SFRBX 0x03 0x0F
 !HEX B5 62 06 01 03 00 03 0F 01 1D 67
 
-# enable TRK-MEAS 03x10
+# enable TRK-MEAS 0x03 0x10
 !HEX B5 62 06 01 03 00 03 10 01 1E 69
 
 # enable NAV-CLOCK
