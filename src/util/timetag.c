@@ -4,8 +4,8 @@
  * Author: Joe Desbonnet, May 2019.
  */
 #include <stdio.h>
-#include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <time.h>
@@ -33,12 +33,7 @@ void main (int argc, char **argv) {
 					stream_format = FORMAT_RAW;
 				}
 				break;
-			
 
-			case 'h':
-				version();
-				usage(argv[0]);
-				exit(EXIT_SUCCESS);
 */
 		}
 	}
@@ -52,7 +47,11 @@ void main (int argc, char **argv) {
 		// Get timestamp of record
 		clock_gettime(CLOCK_REALTIME, &ts);
 
-		printf ("%d.%09d %s", (int)ts.tv_sec, (int)ts.tv_nsec, buf);
+		if (strlen(buf)==0) {
+			continue;
+		}
+
+		printf ("%d.%09d %s\n", (int)ts.tv_sec, (int)ts.tv_nsec, buf);
 		fflush(stdout);
 	}
 
