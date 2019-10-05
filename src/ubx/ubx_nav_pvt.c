@@ -118,6 +118,7 @@ int main (int argc, char **argv) {
 				navpvt.fixType, navpvt.flags>>6, navpvt.flags2,
 				navpvt.lat*1e-7, navpvt.lon*1e-7, navpvt.height*1e-3
 				);
+			fflush(stdout);
 		}
 		
 	}

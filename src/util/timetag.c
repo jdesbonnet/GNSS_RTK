@@ -4,7 +4,6 @@
  * Author: Joe Desbonnet, May 2019.
  */
 #include <stdio.h>
-#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -34,12 +33,7 @@ void main (int argc, char **argv) {
 					stream_format = FORMAT_RAW;
 				}
 				break;
-			
 
-			case 'h':
-				version();
-				usage(argv[0]);
-				exit(EXIT_SUCCESS);
 */
 		}
 	}
