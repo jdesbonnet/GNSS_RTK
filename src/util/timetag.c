@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <time.h>
@@ -52,7 +53,7 @@ void main (int argc, char **argv) {
 		// Get timestamp of record
 		clock_gettime(CLOCK_REALTIME, &ts);
 
-		if (strlen(s)==0) {
+		if (strlen(buf)==0) {
 			continue;
 		}
 

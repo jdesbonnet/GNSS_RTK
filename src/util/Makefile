@@ -1,7 +1,7 @@
 CC=gcc
 DEPS=-lrt
 SOURCES= timetag.c
-EXECUTABLE= timetag
+EXECUTABLE= timetag nmea_filter gamepad_events
 
 $(EXECUTABLE): $(SOURCES) $(DEPS)
 	$(CC) -o $@ $^
