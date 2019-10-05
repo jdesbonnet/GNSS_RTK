@@ -28,7 +28,7 @@ typedef struct {
 	uint8_t valid;
 
 	uint32_t tAcc;
-	uint32_t nano;
+	int32_t nano;
 
 
 	// 0 = no-fix, 1 = dead-recon, 2 = 2D, 3=3D
