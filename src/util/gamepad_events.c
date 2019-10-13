@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
+#include <getopt.h>
 
 #include <sys/time.h>
 
@@ -12,6 +14,8 @@
  * eg 
  * 1570287474.679514 keydown 288
  * 1570287474.799524 keyup 288
+ *
+ * Joystick API: https://www.kernel.org/doc/Documentation/input/joystick-api.txt
  */
 
 void usage (char *cmd) {
@@ -23,7 +27,39 @@ void usage (char *cmd) {
 void main (int argc, char **argv) {
 	FILE *f;
 	struct input_event event;
+	int use_js_api = 0;
 	char *device;
+	int index,c;
+
+
+	static struct option longopts[] =
+	{
+		{"help", no_argument, 0, 'h'},
+		{"joystick", no_argument, 0, 'j'},
+	};
+
+
+	while (1) {
+
+		index = 0;
+
+		c = getopt_long(argc, argv, "jh", longopts, &index);
+
+		if (c == -1) {
+			break;
+		}
+
+		switch (c) {
+
+			case 'j': {
+				use_js_api = 1;
+				break;
+			}
+
+		}
+
+	}
+
 
 	if (argc < 2) {
 		usage(argv[0]);
@@ -31,6 +67,11 @@ void main (int argc, char **argv) {
 	}
 
 	device = argv[1]; 
+
+
+	if (use_js_api) {
+		fprintf(stderr,"using Joystick API\n");
+	}
 
 	f = fopen (device,"rb");
 
