@@ -23,6 +23,9 @@ sleep 2
 ${STR2STR} -in serial://ttyACM0:230400 -out tcpsvr://:21102 -c ./cfg_f9p_rover.cmd >& rover-tcpsrv-${TS}.log &
 sleep 2
 
+# PVT messages only on 21103 (for bandwidth efficiency)
+netcat localhost 21102 |  ../src/ubx/ubx_nav_pvt | ${STR2STR} -out tcpsvr://:21103 >& rover-PVT-out-${TS}.log &
+
 # Channel rover NMEA to Raspberry Pi Sensehat LED blinker
 #netcat localhost 21102 | /home/pi/GNSS_RTK/ublox_m8p/sense_hat_indicator >& rover-blink-${TS}.log &
 
