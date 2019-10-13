@@ -7,8 +7,13 @@ touch rover-started-${TS}.log
 
 rm -f rover-script-starting-* rover-tcm-in-* rover-tcpsrv-* rover-blink-*
 
-BASE=10.7.0.42
+BASE=$1
 DEVICE=/dev/ttyACM0
+
+if [ "$#" -ne 1 ]; then
+	echo "./start_rover.sh <base-station-ip>"
+	exit 1
+fi
 
 # Read RTCM from base station and send to GNSS receiver
 ${STR2STR} -in tcpcli://${BASE}:21101 -out file://${DEVICE} >& rover-rtcm-in-${TS}.log &
