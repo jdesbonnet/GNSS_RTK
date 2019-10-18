@@ -30,3 +30,8 @@ netcat localhost 21102 |  ../src/ubx/ubx_nav_pvt | ${STR2STR} -out tcpsvr://:211
 #netcat localhost 21102 | /home/pi/GNSS_RTK/ublox_m8p/sense_hat_indicator >& rover-blink-${TS}.log &
 
 netcat localhost 21102 > rover-${TS}.ubx &
+
+
+# PVT service
+netcat localhost 21102 | ../src/ubx/ubx_nav_pvt | ${STR2STR} -out tcpsvr://:21103
+
