@@ -35,3 +35,5 @@ netcat localhost 21102 > rover-${TS}.ubx &
 # PVT service
 netcat localhost 21102 | ../src/ubx/ubx_nav_pvt | ${STR2STR} -out tcpsvr://:21103
 
+# Gamepad
+../src/util/gamepad_events /dev/input/event0 | ${STR2STR} -out tcpsvr://:21104
