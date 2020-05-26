@@ -111,10 +111,12 @@ int main (int argc, char **argv) {
 			// Read NAV-PVT payload
 			fread (&navpvt, sizeof(nav_pvt_t), 1,stdin);
 
+			// Remark: navpvt.nano can be negative
 			fprintf (stdout, "%u  %04d-%02d-%02dT%02d:%02d:%02d.%03dZ  %d %d %d   %.7f %.7f %.3f  \n", 
 				navpvt.iTOW, 
-				navpvt.year,navpvt.month,navpvt.day, navpvt.hour, navpvt.min, navpvt.sec, 
-				(navpvt.nano/1000000),
+				navpvt.year,navpvt.month,navpvt.day, navpvt.hour, navpvt.min, 
+				(navpvt.nano<0 ? navpvt.sec-1 : navpvt.sec), 
+				(navpvt.nano<0 ? (1000000000+navpvt.nano)/1000000 : navpvt.nano/1000000),
 				navpvt.fixType, navpvt.flags>>6, navpvt.flags2,
 				navpvt.lat*1e-7, navpvt.lon*1e-7, navpvt.height*1e-3
 				);
