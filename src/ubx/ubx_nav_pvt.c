@@ -112,6 +112,10 @@ int main (int argc, char **argv) {
 			fread (&navpvt, sizeof(nav_pvt_t), 1,stdin);
 
 			// Remark: navpvt.nano can be negative
+			// Still have a bug here:
+			//492317000  2020-09-25T16:44:58.999Z  3 1 234   53.2825992 -8.9825108 88.294  
+			//492318000  2020-09-25T16:45:-1.999Z  3 1 234   53.2825993 -8.9825106 88.298  
+			//492319000  2020-09-25T16:45:00.999Z  3 1 234   53.2825995 -8.9825105 88.295  
 			fprintf (stdout, "%u  %04d-%02d-%02dT%02d:%02d:%02d.%03dZ  %d %d %d   %.7f %.7f %.3f  \n", 
 				navpvt.iTOW, 
 				navpvt.year,navpvt.month,navpvt.day, navpvt.hour, navpvt.min, 
