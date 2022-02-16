@@ -1,3 +1,5 @@
+# Building libswiftnav in 2022 is not working.
+# Need to checkout submodules.
 if [ ! -e libswiftnav ] ; then
 	git clone https://github.com/swift-nav/libswiftnav/
 	cd libswiftnav
