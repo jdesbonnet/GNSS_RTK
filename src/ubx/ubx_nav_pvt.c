@@ -86,6 +86,7 @@ typedef struct {
 
 int main (int argc, char **argv) {
 	int i, len, c, prevc;
+	int nano, second, minute, hour;
 
 	int hexout = 0;
 	for (i = 0; i < argc; i++) {
@@ -121,12 +122,31 @@ int main (int argc, char **argv) {
 			// Still have a bug here:
 			//492317000  2020-09-25T16:44:58.999Z  3 1 234   53.2825992 -8.9825108 88.294  
 			//492318000  2020-09-25T16:45:-1.999Z  3 1 234   53.2825993 -8.9825106 88.298  
-			//492319000  2020-09-25T16:45:00.999Z  3 1 234   53.2825995 -8.9825105 88.295  
+			//492319000  2020-09-25T16:45:00.999Z  3 1 234   53.2825995 -8.9825105 88.295
+			
+			hour = navpvt.hour;
+			minute = navpvt.min;
+			second = navpvt.sec;
+			nano = navpvt.nano;
+			
+			if (nano < 0) {
+				nano += 1000000000;
+				second -= 1;
+			}
+			if (second < 0) {
+				second += 60;
+				minute -= 1;
+			}
+			if (minute < 0) {
+				minute += 60;
+				hour -= 1;
+			}
+			// TODO: trickle all the way up yo year!
+
+				
 			fprintf (stdout, "%u  %04d-%02d-%02dT%02d:%02d:%02d.%03dZ  %d %d %d   %.7f %.7f %.3f  \n", 
 				navpvt.iTOW, 
-				navpvt.year,navpvt.month,navpvt.day, navpvt.hour, navpvt.min, 
-				(navpvt.nano<0 ? navpvt.sec-1 : navpvt.sec), 
-				(navpvt.nano<0 ? (1000000000+navpvt.nano)/1000000 : navpvt.nano/1000000),
+				navpvt.year, navpvt.month, navpvt.day, hour, minute, second, (nano/1000000), 
 				navpvt.fixType, navpvt.flags>>6, navpvt.flags2,
 				navpvt.lat*1e-7, navpvt.lon*1e-7, navpvt.height*1e-3
 				);
