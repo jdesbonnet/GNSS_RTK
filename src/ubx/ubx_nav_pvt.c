@@ -5,8 +5,14 @@
 #define PI 3.14159265359
 
 /**
- * Decode UBX-NAV-PVT messages, write WGS84 lat, lng, alt
+ * Decode UBX-NAV-PVT messages.
+ * 
+ * Input UBX message stream. 
  *
+ * Output: one message per line. Columns: GPS-time-of-week, ISO timestamp, fixType, flags, flags2, lat, lng, alt
+ *
+ * fixType: 0 = no fix; 2 = 2D fix; 3 = 3D fix
+ * flags: 0 = no carrier phase solution; 1 = float solution; 2 = fixed solution
  * UBX-NAV-PVT frame: [0xB5 0x62 0x01 0x07 [2 byte len] [92 byte nav_pvt_t] ck_a ck_b]
  * 
  * @author Joe Desbonnet
