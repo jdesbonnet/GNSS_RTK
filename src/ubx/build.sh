@@ -3,6 +3,7 @@
 if [ ! -e libswiftnav ] ; then
 	git clone https://github.com/swift-nav/libswiftnav/
 	cd libswiftnav
+	git submodule update --init --recursive
 	mkdir build
 	cd build
 	cmake ../
