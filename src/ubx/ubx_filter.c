@@ -48,6 +48,8 @@ int main (int argc, char **argv) {
 
 			// Read length
 			len = fgetc(stdin) + fgetc(stdin)*256;
+			fputc(len & 0xff, stdout);
+			fputc((len>>8) & 0xff, stdout);
 			if (hexout) {
 				fprintf(stderr,"len=%d ",len);
 			}
