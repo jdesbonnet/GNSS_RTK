@@ -12,7 +12,7 @@
  * crc: 16 bits
  */
 int main (int argc, char **argv) {
-	int i, len, c, prevc;
+	int i, len, c, prevc, msg_type;
 
 	int hexout = 0;
 	for (i = 0; i < argc; i++) {
@@ -25,48 +25,70 @@ int main (int argc, char **argv) {
 		c = fgetc(stdin);
 		if (prevc == 0xB5 && c == 0x62) {
 
-			// Found UBX start of frame 
-			fputc(0xB5,stdout);
-			fputc(0x62,stdout);
+			// Found UBX start of frame
 			if (hexout) {
-				fprintf (stderr,"B5 62 ");
+				fprintf (stdout,"B5 62 ");
+			} else {
+				fputc(0xB5,stdout);
+				fputc(0x62,stdout);
 			}
+
 
 			// Read class
 			c = fgetc(stdin);
-			fputc(c,stdout);
 			if (hexout) {
-				fprintf (stderr,"%02x ", c);
+				fprintf (stdout,"%02X ", c);
+			} else {
+				fputc(c,stdout);
 			}
+			msg_type = c << 8;
 
 			// Read ID
 			c = fgetc(stdin);
-			fputc(c,stdout);
 			if (hexout) {
-				fprintf (stderr,"%02x ", c);
+				fprintf (stdout,"%02X ", c);
+			} else {
+				fputc(c,stdout);
+			}
+			msg_type |= c;
+
+			if (hexout) {
+				switch (msg_type) {
+					case 0x107: fprintf (stdout, " (NAV-PVT) "); break;
+					case 0x213: fprintf (stdout, " (UBX-RXM-SFRBX) "); break;
+					case 0x214: fprintf (stdout, " (RXM-RAW) "); break;
+					case 0x215: fprintf (stdout, " (RXM-RAWX) "); break;
+					case 0x500: fprintf (stdout, " (ACK-NAK) "); break;
+					case 0x501: fprintf (stdout, " (ACK-ACK) "); break;
+					default: fprintf (stdout, " (UNK=%X) ",msg_type); break;
+				}
 			}
 
 			// Read length
 			len = fgetc(stdin) + fgetc(stdin)*256;
-			fputc(len & 0xff, stdout);
-			fputc((len>>8) & 0xff, stdout);
+
 			if (hexout) {
-				fprintf(stderr,"len=%d ",len);
+				fprintf(stdout,"len=%d ",len);
+			} else {
+				fputc(len & 0xff, stdout);
+				fputc((len>>8) & 0xff, stdout);
 			}
 
 			// payload + 2 bytes CRC
 			for (int i = 0; i < len+2; i++) {
 				c = fgetc(stdin);
-				fputc(c,stdout);
 				if (hexout) {
-					fprintf (stderr,"%02x ", c);
+					fprintf (stdout,"%02X ", c);
+				} else {
+					fputc(c,stdout);
 				}
 			}
-			fflush(stdout);	
+
 			if (hexout) {
-				fprintf(stderr,"\n");
-				fflush(stderr);
+				fprintf(stdout,"\n");
 			}
+
+			fflush(stdout);	
 		}
 		prevc = c;
 	}
