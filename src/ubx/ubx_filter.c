@@ -60,6 +60,8 @@ int main (int argc, char **argv) {
 					case 0x215: fprintf (stdout, " (RXM-RAWX) "); break;
 					case 0x500: fprintf (stdout, " (ACK-NAK) "); break;
 					case 0x501: fprintf (stdout, " (ACK-ACK) "); break;
+					case 0xD03: fprintf (stdout, " (TIM-TM2) "); break;
+
 					default: fprintf (stdout, " (UNK=%X) ",msg_type); break;
 				}
 			}
