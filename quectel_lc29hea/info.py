@@ -56,10 +56,10 @@ if __name__ == '__main__':
 
     while True:
          if ser.in_waiting > 0:
-              #data = ser.readline().decode('utf-8').strip()
-              print(ser.readline())
+              data = ser.readline().decode('utf-8').strip()
+              if data.startswith("$PQTMVERNO") :
+                  print(data)
+                  break
 
-              # Optional: Slow down the read loop if necessary
-              #time.sleep(0.1)
 
 
