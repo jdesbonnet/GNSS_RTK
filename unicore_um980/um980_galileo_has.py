@@ -23,6 +23,7 @@ if __name__ == '__main__':
     send_command(ser,"CONFIG SIGNALGROUP 2")
     send_command(ser,"GPGGA 0.5")
     send_command(ser,"GPGSV 1")
+    send_command(ser,"GPRMC 1")
     send_command(ser,"CONFIG PPP ENABLE E6-HAS")
     send_command(ser,"CONFIG PPP DATUM WGS84")
     send_command(ser,"CONFIG PPP CONVERGE 50 50")
