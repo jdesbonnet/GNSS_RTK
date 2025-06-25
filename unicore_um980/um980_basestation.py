@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+ 
+# Script to configure UM980 into base station mode and then optionally
+# relay RTCM messages to a NTRIP caster.
+#
+ 
+
+
 import time
 import socket
 import base64
@@ -131,13 +139,13 @@ def main (args) :
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Quectel GNSS")
-    parser.add_argument("--device", help="Serial port device", required=True)
+    parser.add_argument("--device", help="GNSS serial port device", required=True)
     parser.add_argument("--baudrate", type=int, help="Serial port speed (bps/baud rate)", required=True)
-    parser.add_argument("--caster-host",help="NTRIP host")
-    parser.add_argument("--caster-port",type=int, help="NTRIP port", default=2101)
-    parser.add_argument("--caster-username",help="Caster username (optional)", default="")
-    parser.add_argument("--caster-password",help="Caster password (optional)", default="")
-    parser.add_argument("--caster-mountpoint",help="Caster mountpoint")
+    parser.add_argument("--caster-host",help="NTRIP caster host")
+    parser.add_argument("--caster-port",type=int, help="NTRIP caster port", default=2101)
+    parser.add_argument("--caster-username",help="NTRIP caster username (optional)", default="")
+    parser.add_argument("--caster-password",help="NTRIP caster password (optional)", default="")
+    parser.add_argument("--caster-mountpoint",help="NTRIP caster mountpoint")
 
 
     args = parser.parse_args()
