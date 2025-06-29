@@ -22,22 +22,18 @@ if __name__ == '__main__':
 
     send_command(ser,"version")
     send_command(ser,"freset")
+
     time.sleep(10)
-    send_command(ser,"CONFIG SIGNALGROUP 2")
-    send_command(ser,"GNGGA 0.2")
-    send_command(ser,"GNGSV 1")
-    send_command(ser,"GPRMC 1")
-    send_command(ser,"CONFIG PPP ENABLE E6-HAS")
-    send_command(ser,"CONFIG PPP DATUM WGS84")
-    send_command(ser,"CONFIG PPP CONVERGE 50 50")
-
-
+    send_command(ser,"GNGGA COM1 0.2")
+    send_command(ser,"GNRMC COM1 1")
+    send_command(ser,"GNGSV COM1 1")
 
     while True:
          if ser.in_waiting > 0:
               data = ser.readline().decode('utf-8').strip()
               print(data)
               sys.stdout.flush()
+
               # Optional: Slow down the read loop if necessary
               #time.sleep(0.1)
 
