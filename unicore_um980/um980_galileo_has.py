@@ -38,6 +38,11 @@ if __name__ == '__main__':
     send_command(ser,"GNRMC 1")
 
 
+    # Extra instrumentation
+    send_command(ser,"FREQJAMSTATUSA 1")
+    send_command(ser,"HWSTATUSA 1")
+    send_command(ser,"RTKSTATUSA 1")
+
 
     while True:
          if ser.in_waiting > 0:
