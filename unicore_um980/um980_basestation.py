@@ -45,11 +45,12 @@ def print_rtcm_as_hex(msg):
     print(hex_str)
 
 def send_chunked(sock, data):
-    chunk = f"{len(data):X}\r\n".encode('ascii') + data + b"\r\n"
-    sock.sendall(chunk)
+    #chunk = f"{len(data):X}\r\n".encode('ascii') + data + b"\r\n"
+    #sock.sendall(chunk)
+    sock.sendall(data)
 
 
-def um980_init_basestation (ser, comport="COM1",survey_in_time=60) :
+def um980_init_basestation (ser, args, comport="COM1",survey_in_time=60) :
     """
     Configure UM980 to be in base station mode
     """
@@ -68,7 +69,8 @@ def um980_init_basestation (ser, comport="COM1",survey_in_time=60) :
         send_command(ser,cfgline)
 
 
-    send_command(ser,f"MODE BASE TIME {survey_in_time}")
+    #send_command(ser,f"MODE BASE TIME {survey_in_time}")
+    send_command(ser,f"MODE BASE {args.antenna_lat} {args.antenna_lng} {args.antenna_alt}")
 
 
 def connect_to_ntrip_caster(host, port, mountpoint, user, passwd):
@@ -116,7 +118,7 @@ def main (args) :
 
     ser = serial.Serial(port=args.device, baudrate=args.baudrate, timeout=1)
 
-    um980_init_basestation (ser)
+    um980_init_basestation (ser,args)
 
 
     if args.caster_host and args.caster_port :
@@ -130,10 +132,10 @@ def main (args) :
 
     while True:
         if ser.in_waiting > 0:
-            print(ser.read().hex())
+            #print(ser.read().hex())
             msg = read_rtcm_message(ser)
             if msg:
-                print_rtcm_as_hex(msg)
+                #print_rtcm_as_hex(msg)
                 send_chunked(ntrip_sock,msg)
 
 if __name__ == '__main__':
@@ -146,6 +148,9 @@ if __name__ == '__main__':
     parser.add_argument("--caster-username",help="NTRIP caster username (optional)", default="")
     parser.add_argument("--caster-password",help="NTRIP caster password (optional)", default="")
     parser.add_argument("--caster-mountpoint",help="NTRIP caster mountpoint")
+    parser.add_argument("--antenna-lat",type=float,help="Antenna latitude")
+    parser.add_argument("--antenna-lng",type=float,help="Antenna longitude")
+    parser.add_argument("--antenna-alt",type=float,help="Antenna altitude m")
 
 
     args = parser.parse_args()
